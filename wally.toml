@@ -1,0 +1,11 @@
+[package]
+name = "redon-tech/redonuui"
+version = "0.1.0"
+license = "MIT"
+authors = ["parker02311"]
+
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Fusion = "elttob/fusion@0.3.0"
