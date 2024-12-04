@@ -17,22 +17,11 @@ export type props = base.props & {
 	IsHovering: Fusion.UsedAs<boolean>,
 }
 
-return function<T>(scope: Fusion.Scope<any>, props: props & { ClassName: T }): T
-	local Scope = Fusion.innerScope(scope, Fusion, Components, Util)
+return function<T>(baseScope: Fusion.Scope<any>, props: props & { ClassName: T }): T
+	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 
-	return Scope:base(props.ClassName)(Scope:CombineProperties(props, {
-		[Fusion.OnEvent "MouseEnter"] = function()
-			if props.Disabled then
-				return
-			end
-			Scope:peek(props.OnMouseEnter)()
-		end,
-
-		[Fusion.OnEvent "MouseLeave"] = function()
-			if props.Disabled then
-				return
-			end
-			Scope:peek(props.OnMouseLeave)()
-		end,
+	return scope:base(scope.CombineProperties(props, {
+		[Fusion.OnEvent("MouseEnter")] = scope:PeekIfEnabled(props, props.OnMouseEnter),
+		[Fusion.OnEvent("MouseLeave")] = scope:PeekIfEnabled(props, props.OnMouseLeave),
 	}))
 end
