@@ -10,6 +10,30 @@ local Components = {
 
 return uiLabs.CreateFusionStory({
 	fusion = Fusion,
+	controls = {
+		gradientBegin = uiLabs.Choose(theme.colors, 11),
+		gradientEnd = uiLabs.Choose(theme.colors, 12),
+		Border = 3,
+		CornerRadius = 25,
+		Shadow = true,
+		ShadowColor = uiLabs.Choose(theme.colors, 11),
+		ButtonGlow = true,
+		ButtonGlowColor = uiLabs.Choose(theme.colors, 15),
+		Reactive = true,
+		Text = "TextButton",
+		TextColor = uiLabs.Choose(theme.colors, 25),
+		FontWeight = uiLabs.Choose({
+			"Thin",
+			"ExtraLight",
+			"Light",
+			"Regular",
+			"Medium",
+			"SemiBold",
+			"Bold",
+			"ExtraBold",
+			"Heavy",
+		}, 4),
+	},
 }, function(props: uiLabs.FusionProps)
 	local scope = Fusion.innerScope(props.scope, Components)
 	local currentTheme = theme.theme:now()
@@ -21,37 +45,27 @@ return uiLabs.CreateFusionStory({
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 
 		-- BackgroundColor = "sapphire",
-		Gradient = ColorSequence.new(currentTheme.colors.sky, currentTheme.colors.sapphire),
-		Border = 3,
-		CornerRadius = UDim.new(0, 25),
+		Gradient = scope:Computed(function(use)
+			return ColorSequence.new(
+				currentTheme.colors[use(props.controls.gradientBegin)],
+				currentTheme.colors[use(props.controls.gradientEnd)]
+			)
+		end),
+		Border = props.controls.Border,
+		CornerRadius = scope:Computed(function(use)
+			return UDim.new(0, use(props.controls.CornerRadius))
+		end),
+		Shadow = props.controls.Shadow,
+		ShadowColor = props.controls.ShadowColor,
+		ButtonGlow = props.controls.ButtonGlow,
+		ButtonGlowColor = props.controls.ButtonGlowColor,
 
-		Text = "TextButton",
-		TextColor = "mantle",
+		Text = props.controls.Text,
+		TextColor = props.controls.TextColor,
+		FontWeight = scope:Computed(function(use)
+			return Enum.FontWeight[use(props.controls.FontWeight)]
+		end),
 
-		OnMouseEnter = function()
-			print("MouseEnter")
-		end,
-
-		OnActivated = function()
-			print("Activated")
-		end,
-		OnMouseButton1Click = function()
-			print("MouseButton1Click")
-		end,
-		OnMouseButton1Down = function()
-			print("MouseButton1Down")
-		end,
-		OnMouseButton1Up = function()
-			print("MouseButton1Up")
-		end,
-		OnMouseButton2Click = function()
-			print("MouseButton2Click")
-		end,
-		OnMouseButton2Down = function()
-			print("MouseButton2Down")
-		end,
-		OnMouseButton2Up = function()
-			print("MouseButton2Up")
-		end,
+		Reactive = true,
 	}
 end)

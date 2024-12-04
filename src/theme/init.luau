@@ -31,6 +31,35 @@ export type colors =
 	| "mantle"
 	| "crust"
 
+local colorNames = {
+	"rosewater",
+	"flamingo",
+	"pink",
+	"mauve",
+	"red",
+	"maroon",
+	"peach",
+	"yellow",
+	"green",
+	"teal",
+	"sky",
+	"sapphire",
+	"blue",
+	"lavender",
+	"text",
+	"subtext1",
+	"subtext0",
+	"overlay2",
+	"overlay1",
+	"overlay0",
+	"surface2",
+	"surface1",
+	"surface0",
+	"base",
+	"mantle",
+	"crust",
+}
+
 type colorTypes = catppuccin.neutrals<Color3> & catppuccin.accents<Color3> & {
 	white: Color3,
 	black: Color3,
@@ -49,6 +78,7 @@ type theme = {
 	macchiato: actualTheme,
 	mocha: actualTheme,
 	theme: Fusion.Contextual<actualTheme>,
+	colors: { string },
 }
 
 local baseFont = "rbxassetid://12187365364"
@@ -74,6 +104,7 @@ local theme = {
 		colors = { white = Color3.fromRGB(255, 255, 255), black = Color3.fromRGB(0, 0, 0) },
 		font = fonts,
 	},
+	colors = colorNames,
 } :: theme
 
 for themeName, colors in pairs(catppuccin) do

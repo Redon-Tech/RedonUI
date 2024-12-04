@@ -4,9 +4,12 @@ local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
 
-local Components = {}
+local shadow = require(script.Parent.shadow)
+local Components = {
+	shadow = shadow,
+}
 
-export type props = {
+export type baseProps = {
 	ClassName: Fusion.UsedAs<string>,
 	Name: Fusion.UsedAs<string>,
 	Parent: Fusion.UsedAs<Instance>?,
@@ -27,14 +30,32 @@ export type props = {
 	BorderColor: Fusion.UsedAs<theme.colors>?,
 	CornerRadius: Fusion.UsedAs<UDim>?,
 
-	[typeof(Fusion.Children)]: typeof(Fusion.Children),
+	Shadow: Fusion.UsedAs<boolean>?,
+	ShadowColor: Fusion.UsedAs<theme.colors>?,
+
+	[typeof(Fusion.Children) | string]: typeof(Fusion.Children),
 }
 
-return function<T>(baseScope: Fusion.Scope<any>, props: props & { ClassName: T }): T
+return Util.Component(function<T>(baseScope: Util.Scope, props: baseProps & { ClassName: T })
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
-	return scope:New(props.ClassName) {
+	local ClassName = Util.EatValue(props, "ClassName")
+
+	local BackgroundColor = Util.EatValue(props, "BackgroundColor")
+
+	local Gradient = Util.EatValue(props, "Gradient")
+	local GradientTransparency = Util.EatValue(props, "GradientTransparency")
+	local GradientRotation = Util.EatValue(props, "GradientRotation")
+
+	local Border = Util.EatValue(props, "Border")
+	local BorderColor = Util.EatValue(props, "BorderColor")
+	local CornerRadius = Util.EatValue(props, "CornerRadius")
+
+	local Shadow = Util.EatValue(props, "Shadow")
+	local ShadowColor = Util.EatValue(props, "ShadowColor")
+
+	return scope:New(ClassName)(scope.CombineProperties({
 		Name = props.Name,
 		Parent = props.Parent,
 
@@ -42,25 +63,31 @@ return function<T>(baseScope: Fusion.Scope<any>, props: props & { ClassName: T }
 		Position = props.Position,
 		Size = props.Size,
 
-		BackgroundColor3 = currentTheme.colors[props.BackgroundColor],
+		BackgroundColor3 = scope:Computed(function(use)
+			if use(BackgroundColor) ~= nil then
+				return currentTheme.colors[use(BackgroundColor)]
+			else
+				return currentTheme.colors.white
+			end
+		end),
 		BackgroundTransparency = props.BackgroundTransparency,
 		Visible = props.Visible,
 
 		[Fusion.Children] = {
 			scope:Computed(function(use)
-				return if use(props.CornerRadius) ~= nil
+				return if use(CornerRadius) ~= nil
 					then scope:New("UICorner") {
-						CornerRadius = use(props.CornerRadius),
+						CornerRadius = use(CornerRadius),
 					}
 					else nil
 			end),
 
 			scope:Computed(function(use)
-				return if use(props.Border) ~= nil
+				return if use(Border) ~= nil
 					then scope:New("UIStroke") {
-						Thickness = use(props.Border),
-						Color = if use(props.BorderColor) ~= nil
-							then currentTheme.colors[use(props.BorderColor)]
+						Thickness = use(Border),
+						Color = if use(BorderColor) ~= nil
+							then currentTheme.colors[use(BorderColor)]
 							else currentTheme.colors.white,
 						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 					}
@@ -68,16 +95,24 @@ return function<T>(baseScope: Fusion.Scope<any>, props: props & { ClassName: T }
 			end),
 
 			scope:Computed(function(use)
-				return if use(props.Gradient) ~= nil
+				return if use(Gradient) ~= nil
 					then scope:New("UIGradient") {
-						Color = use(props.Gradient),
-						Transparency = use(props.GradientTransparency),
-						Rotation = use(props.GradientRotation),
+						Color = use(Gradient),
+						Transparency = use(GradientTransparency),
+						Rotation = use(GradientRotation),
+					}
+					else nil
+			end),
+
+			scope:Computed(function(use)
+				return if use(Shadow) == true
+					then scope:shadow {
+						ShadowColor = use(ShadowColor),
 					}
 					else nil
 			end),
 
 			props[Fusion.Children],
 		},
-	}
-end
+	}, props))
+end)
