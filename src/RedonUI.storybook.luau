@@ -1,6 +1,4 @@
 return {
 	name = "RedonUI",
-	storyRoutes = {
-		script.Parent.Components,
-	},
+	storyRoutes = script.Parent:GetChildren(),
 }
