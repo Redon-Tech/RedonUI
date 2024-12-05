@@ -58,6 +58,8 @@ local colorNames = {
 	"base",
 	"mantle",
 	"crust",
+	"white",
+	"black",
 }
 
 type colorTypes = catppuccin.neutrals<Color3> & catppuccin.accents<Color3> & {

@@ -21,7 +21,7 @@ export type props = base.baseProps & {
 	Reactive: Fusion.UsedAs<boolean>?,
 }
 
-return function(baseScope: Fusion.Scope<any>, props: props): TextButton
+return function(baseScope: Fusion.Scope<any>, props: props)
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
