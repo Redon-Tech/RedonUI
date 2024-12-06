@@ -52,7 +52,8 @@ return uiLabs.CreateFusionStory({
 				TextSize = props.controls.TextSize,
 				TextWrapped = true,
 				FontWeight = scope:Computed(function(use)
-					return Enum.FontWeight[use(props.controls.FontWeight)]
+					-- Yes, this ignores type checking, but we KNOW that the value is a valid enum
+					return (Enum.FontWeight :: any)[use(props.controls.FontWeight)]
 				end),
 				TextXAlignment = Enum.TextXAlignment.Center,
 				TextYAlignment = Enum.TextYAlignment.Center,

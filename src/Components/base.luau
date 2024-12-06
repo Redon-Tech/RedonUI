@@ -40,20 +40,20 @@ return Util.Component(function<T>(baseScope: Util.Scope, props: baseProps & { Cl
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
-	local ClassName = Util.EatValue(props, "ClassName")
+	local ClassName = Util.EatValue(props, "ClassName") :: Fusion.UsedAs<string>
 
-	local BackgroundColor = Util.EatValue(props, "BackgroundColor")
+	local BackgroundColor = Util.EatValue(props, "BackgroundColor") :: Fusion.UsedAs<theme.colors>?
 
-	local Gradient = Util.EatValue(props, "Gradient")
-	local GradientTransparency = Util.EatValue(props, "GradientTransparency")
-	local GradientRotation = Util.EatValue(props, "GradientRotation")
+	local Gradient = Util.EatValue(props, "Gradient") :: Fusion.UsedAs<ColorSequence>?
+	local GradientTransparency = Util.EatValue(props, "GradientTransparency") :: Fusion.UsedAs<NumberSequence>?
+	local GradientRotation = Util.EatValue(props, "GradientRotation") :: Fusion.UsedAs<number>?
 
-	local Border = Util.EatValue(props, "Border")
-	local BorderColor = Util.EatValue(props, "BorderColor")
-	local CornerRadius = Util.EatValue(props, "CornerRadius")
+	local Border = Util.EatValue(props, "Border") :: Fusion.UsedAs<number>?
+	local BorderColor = Util.EatValue(props, "BorderColor") :: Fusion.UsedAs<theme.colors>?
+	local CornerRadius = Util.EatValue(props, "CornerRadius") :: Fusion.UsedAs<UDim>?
 
-	local Shadow = Util.EatValue(props, "Shadow")
-	local ShadowColor = Util.EatValue(props, "ShadowColor")
+	local Shadow = Util.EatValue(props, "Shadow") :: Fusion.UsedAs<boolean>?
+	local ShadowColor = Util.EatValue(props, "ShadowColor") :: Fusion.UsedAs<theme.colors>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
 		Name = props.Name,

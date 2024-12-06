@@ -24,9 +24,9 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
-	local Enabled = scope.EatValue(props, "Enabled")
-	local SelectedColor = scope.EatValue(props, "SelectedColor")
-	local SelectedCheckColor = scope.EatValue(props, "SelectedCheckColor")
+	local Enabled = scope.EatValue(props, "Enabled") :: Fusion.UsedAs<boolean>
+	local SelectedColor = scope.EatValue(props, "SelectedColor") :: Fusion.UsedAs<theme.colors>?
+	local SelectedCheckColor = scope.EatValue(props, "SelectedCheckColor") :: Fusion.UsedAs<theme.colors>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {

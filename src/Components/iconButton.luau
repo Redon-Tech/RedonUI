@@ -20,8 +20,8 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
-	local Image = Util.EatValue(props, "Image")
-	local ImageColor = Util.EatValue(props, "ImageColor")
+	local Image = Util.EatValue(props, "Image") :: Fusion.UsedAs<string>
+	local ImageColor = Util.EatValue(props, "ImageColor") :: Fusion.UsedAs<theme.colors>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {

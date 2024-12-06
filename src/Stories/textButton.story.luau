@@ -53,7 +53,8 @@ return uiLabs.CreateFusionStory({
 		Text = props.controls.Text,
 		TextColor = props.controls.TextColor,
 		FontWeight = scope:Computed(function(use)
-			return Enum.FontWeight[use(props.controls.FontWeight)]
+			-- Yes, this ignores type checking, but we KNOW that the value is a valid enum
+			return (Enum.FontWeight :: any)[use(props.controls.FontWeight)]
 		end),
 
 		Reactive = true,

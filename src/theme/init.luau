@@ -62,6 +62,17 @@ local colorNames = {
 	"black", -- 28
 }
 
+export type fontWeights =
+	"Thin"
+	| "ExtraLight"
+	| "Light"
+	| "Regular"
+	| "Medium"
+	| "SemiBold"
+	| "Bold"
+	| "ExtraBold"
+	| "Heavy"
+
 local fontWeights = {
 	"Thin", -- 1
 	"ExtraLight", -- 2

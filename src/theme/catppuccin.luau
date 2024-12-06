@@ -59,7 +59,7 @@ export type neutrals<T> = {
 }
 
 export type catppuccinColors = accents<Color3> & neutrals<Color3> & {
-	name: Color3,
+	name: string,
 }
 
 local mocha = {
