@@ -31,10 +31,6 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 	local Position = Util.EatValue(props, "Position")
 	local AnchorPoint = Util.EatValue(props, "AnchorPoint")
 
-	local Text = Util.EatValue(props, "Text")
-	local TextColor = Util.EatValue(props, "TextColor")
-	local FontWeight = Util.EatValue(props, "FontWeight")
-
 	local Reactive = Util.EatValue(props, "Reactive")
 
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow")
@@ -113,18 +109,6 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 				end,
 
 				[Fusion.Children] = {
-					scope:New("TextLabel") {
-						Name = "Text",
-						AnchorPoint = Vector2.new(0.5, 0.5),
-						Position = UDim2.new(0.5, 0, 0.5, 0),
-						Size = UDim2.new(0.8, 0, 1, 0),
-						BackgroundTransparency = 1,
-						Text = Text,
-						TextColor3 = currentTheme.colors[TextColor or "text"],
-						TextScaled = true,
-						FontFace = currentTheme.font[FontWeight or Enum.FontWeight.Regular],
-					},
-
 					scope:Computed(function(use)
 						return if use(ButtonGlow) == true
 							then scope:New("ImageLabel") {
