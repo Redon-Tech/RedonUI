@@ -3,36 +3,44 @@ local Fusion = require(RedonUI.Parent.Fusion)
 local uiLabs = require(RedonUI.Parent["ui-labs"])
 local theme = require(RedonUI.theme)
 
-local iconButton = require(RedonUI.Components.iconButton)
+local textButton = require(RedonUI.Components.textButton)
 local Components = {
-	iconButton = iconButton,
+	textButton = textButton,
 }
 
 return uiLabs.CreateFusionStory({
 	fusion = Fusion,
 	controls = {
-		BackgroundColor = uiLabs.Choose(theme.colors, 25),
+		gradientBegin = uiLabs.Choose(theme.colors, 11),
+		gradientEnd = uiLabs.Choose(theme.colors, 12),
 		Border = 3,
 		CornerRadius = 25,
 		Shadow = true,
-		ShadowColor = uiLabs.Choose(theme.colors, 28),
+		ShadowColor = uiLabs.Choose(theme.colors, 11),
 		ButtonGlow = true,
-		ButtonGlowColor = uiLabs.Choose(theme.colors, 24),
+		ButtonGlowColor = uiLabs.Choose(theme.colors, 15),
 		Reactive = true,
-		Image = "rbxassetid://80323595668024",
-		ImageColor = uiLabs.Choose(theme.colors, 15),
+		Text = "TextButton",
+		TextColor = uiLabs.Choose(theme.colors, 25),
+		FontWeight = uiLabs.Choose(theme.weights, 4),
 	},
 }, function(props: uiLabs.FusionProps)
 	local scope = Fusion.innerScope(props.scope, Components)
 	local currentTheme = theme.theme:now()
 
-	return scope:iconButton {
+	return scope:textButton {
 		Parent = props.target,
-		Size = UDim2.new(0, 80, 0, 80),
+		Size = UDim2.new(0, 350, 0, 80),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 
-		BackgroundColor = props.controls.BackgroundColor,
+		-- BackgroundColor = "sapphire",
+		Gradient = scope:Computed(function(use)
+			return ColorSequence.new(
+				currentTheme.colors[use(props.controls.gradientBegin)],
+				currentTheme.colors[use(props.controls.gradientEnd)]
+			)
+		end),
 		Border = props.controls.Border,
 		CornerRadius = scope:Computed(function(use)
 			return UDim.new(0, use(props.controls.CornerRadius))
@@ -42,8 +50,11 @@ return uiLabs.CreateFusionStory({
 		ButtonGlow = props.controls.ButtonGlow,
 		ButtonGlowColor = props.controls.ButtonGlowColor,
 
-		Image = props.controls.Image,
-		ImageColor = props.controls.ImageColor,
+		Text = props.controls.Text,
+		TextColor = props.controls.TextColor,
+		FontWeight = scope:Computed(function(use)
+			return Enum.FontWeight[use(props.controls.FontWeight)]
+		end),
 
 		Reactive = true,
 	}
