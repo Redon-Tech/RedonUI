@@ -27,9 +27,9 @@ return uiLabs.CreateFusionStory({
 
 	return scope:iconButton {
 		Parent = props.target,
-		Size = UDim2.new(0, 80, 0, 80),
+		Size = UDim2.fromOffset(80, 80),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.5),
 
 		BackgroundColor = props.controls.BackgroundColor,
 		Border = props.controls.Border,

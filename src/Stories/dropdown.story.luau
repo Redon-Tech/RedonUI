@@ -26,9 +26,9 @@ return uiLabs.CreateFusionStory({
 	return scope:base {
 		ClassName = "Frame",
 		Parent = props.target,
-		Size = UDim2.new(0, 250, 0, 250),
+		Size = UDim2.fromOffset(250, 250),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.5),
 
 		BackgroundColor = "base",
 

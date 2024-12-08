@@ -39,6 +39,7 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 						return currentTheme.colors.text
 					end
 				end),
+				ScaleType = Enum.ScaleType.Fit,
 
 				ZIndex = 1,
 			},

@@ -25,8 +25,8 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 			scope:textLabel {
 				Name = "Text",
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 0, 0.5, 0),
-				Size = UDim2.new(0.8, 0, 1, 0),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(0.8, 1),
 				BackgroundTransparency = 1,
 				Text = Text,
 				TextColor = TextColor,

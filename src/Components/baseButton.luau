@@ -19,34 +19,63 @@ export type props = base.baseProps & {
 	ButtonGlowColor: Fusion.UsedAs<theme.colors>?,
 
 	Reactive: Fusion.UsedAs<boolean>?,
+	TriggerHover: Fusion.UsedAs<boolean>?,
+
+	ForceSpeed: number?,
+	ForceDamping: number?,
 }
+
+local SPRING_SPEED = 20
+local SPRING_DAMPING = 0.5
 
 return function(baseScope: Fusion.Scope<any>, props: props)
 	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
 	local currentTheme = theme.theme:now()
 
-	local Parent = Util.EatValue(props, "Parent")
+	if props.ForceSpeed ~= nil then
+		SPRING_SPEED = props.ForceSpeed
+	end
+	if props.ForceDamping ~= nil then
+		SPRING_DAMPING = props.ForceDamping
+	end
 
-	local Size = Util.EatValue(props, "Size")
-	local Position = Util.EatValue(props, "Position")
-	local AnchorPoint = Util.EatValue(props, "AnchorPoint")
+	local Parent = Util.EatValue(props, "Parent") :: Fusion.UsedAs<Instance>?
 
-	local Reactive = Util.EatValue(props, "Reactive")
+	local Size = Util.EatValue(props, "Size") :: Fusion.UsedAs<UDim2>?
+	local Position = Util.EatValue(props, "Position") :: Fusion.UsedAs<UDim2>?
+	local AnchorPoint = Util.EatValue(props, "AnchorPoint") :: Fusion.UsedAs<Vector2>?
 
-	local ButtonGlow = Util.EatValue(props, "ButtonGlow")
-	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor")
+	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 
-	local MouseEnter = Util.EatValue(props, "MouseEnter")
-	local MouseLeave = Util.EatValue(props, "MouseLeave")
-	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down")
-	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up")
+	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
+	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor") :: Fusion.UsedAs<theme.colors>?
+
+	local MouseEnter = Util.EatValue(props, "MouseEnter") :: (() -> ())?
+	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
+	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
+	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up") :: (() -> ())?
 	local events = Util.StealEvents(props)
 
 	local desiredButtonPosition = scope:Value(UDim2.fromScale(0.5, 0.5))
-	local animatedButtonPosition = scope:Spring(desiredButtonPosition, 20, 0.5)
+	local animatedButtonPosition = scope:Spring(desiredButtonPosition, SPRING_SPEED, SPRING_DAMPING)
 	local desiredButtonSize = scope:Value(UDim2.fromScale(1, 1))
-	local animatedButtonSize = scope:Spring(desiredButtonSize, 20, 0.5)
+	local animatedButtonSize = scope:Spring(desiredButtonSize, SPRING_SPEED, SPRING_DAMPING)
 	local isHovered = scope:Value(false)
+
+	local TriggerHover = Util.EatValue(props, "TriggerHover") :: Fusion.UsedAs<boolean>?
+	if TriggerHover ~= nil then
+		scope:Observer(TriggerHover):onChange(function()
+			if scope.peek(TriggerHover) == true then
+				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.4))
+				desiredButtonSize:set(UDim2.fromScale(1.05, 1.05))
+				isHovered:set(true)
+			else
+				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.5))
+				desiredButtonSize:set(UDim2.fromScale(1, 1))
+				isHovered:set(false)
+			end
+		end)
+	end
 
 	return scope:New("Frame") {
 		Parent = Parent,

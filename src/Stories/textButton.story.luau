@@ -30,9 +30,9 @@ return uiLabs.CreateFusionStory({
 
 	return scope:textButton {
 		Parent = props.target,
-		Size = UDim2.new(0, 350, 0, 80),
+		Size = UDim2.fromOffset(350, 80),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.5),
 
 		-- BackgroundColor = "sapphire",
 		Gradient = scope:Computed(function(use)
