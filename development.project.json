@@ -7,7 +7,7 @@
             "Packages": {
                 "$path": "Packages",
                 "RedonUI": {
-                    "$path": "DevelopmentBuilder"
+                    "$path": "Builders/DevelopmentBuilder.luau"
                 },
                 "_RedonUI": {
                     "$path": "src"

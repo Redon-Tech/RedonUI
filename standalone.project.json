@@ -1,0 +1,12 @@
+{
+    "name": "RedonUI",
+    "tree": {
+        "$path": "Builders/StandaloneBuilder.luau",
+        "Packages": {
+            "$path": "Packages",
+            "RedonUI": {
+                "$path": "src"
+            }
+        }
+    }
+}
