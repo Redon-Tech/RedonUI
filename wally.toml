@@ -1,6 +1,6 @@
 [package]
 name = "redon-tech/redonuui"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
 license = "MIT"
 authors = ["parker02311"]
 
