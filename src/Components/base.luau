@@ -3,6 +3,7 @@ local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local shadow = require(script.Parent.shadow)
 local Components = {
@@ -10,8 +11,8 @@ local Components = {
 }
 
 export type baseProps = {
-	ClassName: Fusion.UsedAs<string>,
-	Name: Fusion.UsedAs<string>,
+	ClassName: string?,
+	Name: Fusion.UsedAs<string>?,
 	Parent: Fusion.UsedAs<Instance>?,
 
 	AnchorPoint: Fusion.UsedAs<Vector2>?,
@@ -32,15 +33,16 @@ export type baseProps = {
 
 	Shadow: Fusion.UsedAs<boolean>?,
 	ShadowColor: Fusion.UsedAs<theme.colors>?,
-
-	[typeof(Fusion.Children) | string]: typeof(Fusion.Children),
 }
 
-return Util.Component(function<T>(baseScope: Util.Scope, props: baseProps & { ClassName: T })
-	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
+return Util.Component(function<T>(baseScope: types.Scope, props: baseProps & { ClassName: T })
+	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
-	local ClassName = Util.EatValue(props, "ClassName") :: Fusion.UsedAs<string>
+	local ClassName = Util.EatValue(props, "ClassName") :: string
+	if ClassName == nil then
+		ClassName = "Frame"
+	end
 
 	local BackgroundColor = Util.EatValue(props, "BackgroundColor") :: Fusion.UsedAs<theme.colors>?
 

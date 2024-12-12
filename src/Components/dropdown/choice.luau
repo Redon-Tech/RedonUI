@@ -3,9 +3,10 @@ local RedonUI = script.Parent.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local base = require(RedonUI.Components.base)
-local components = {
+local Components = {
 	base = base,
 }
 
@@ -16,8 +17,8 @@ export type props = base.baseProps & {
 	OnSelect: () -> (),
 }
 
-return function(baseScope: Fusion.Scope<any>, props: props)
-	local scope = Fusion.innerScope(baseScope, Fusion, components, Util)
+return function(baseScope: types.Scope, props: props)
+	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
 	local InitialBackgroundColor = Util.EatValue(props, "BackgroundColor") :: Fusion.UsedAs<theme.colors>
@@ -63,7 +64,7 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 		[Fusion.OnEvent "MouseLeave"] = function()
 			BackgroundColor:set(scope.peek(InitialBackgroundColor))
 		end,
-
+	}, {
 		[Fusion.Children] = {
 			scope:New("UIPadding") {
 				PaddingLeft = UDim.new(0, 9),

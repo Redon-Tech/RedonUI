@@ -3,6 +3,7 @@ local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local base = require(RedonUI.Components.base)
 local baseButton = require(RedonUI.Components.baseButton)
@@ -16,8 +17,8 @@ export type props = baseButton.props & {
 	ImageColor: Fusion.UsedAs<theme.colors>?,
 }
 
-return function(baseScope: Fusion.Scope<any>, props: props)
-	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
+return function(baseScope: types.Scope, props: props)
+	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
 	local Image = Util.EatValue(props, "Image") :: Fusion.UsedAs<string>

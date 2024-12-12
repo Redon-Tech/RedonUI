@@ -1,8 +1,8 @@
 local RedonUI = script.Parent.Parent
 
 local Fusion = require(RedonUI.Parent.Fusion)
-local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local Components = {}
 
@@ -10,8 +10,8 @@ export type props = {
 	ShadowColor: Fusion.UsedAs<string>?,
 }
 
-return function(baseScope: Fusion.Scope<any>, props: props)
-	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
+return function(baseScope: types.Scope, props: props)
+	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
 	return scope:New("ImageLabel") {

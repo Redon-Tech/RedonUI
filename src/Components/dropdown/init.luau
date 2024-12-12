@@ -3,6 +3,7 @@ local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local base = require(RedonUI.Components.base)
 local baseButton = require(RedonUI.Components.baseButton)
@@ -25,13 +26,13 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 local SPRING_SPEED = 20
 local SPRING_DAMPING = 1
 
-return function<I, V>(baseScope: Fusion.Scope<any>, props: props<I, V>)
-	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
+return function<I, V>(baseScope: types.Scope, props: props<I, V>)
+	local scope = Fusion.innerScope(baseScope, Components)
 	local currenTheme = theme.theme:now()
 
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>
-	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>
+	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>?
+	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 
 	local Options = Util.EatValue(props, "Options") :: Fusion.UsedAs<{ [I]: V }>
 	local OnOptionSelected = Util.EatValue(props, "OnOptionSelected") :: (I, V) -> ()
@@ -48,8 +49,8 @@ return function<I, V>(baseScope: Fusion.Scope<any>, props: props<I, V>)
 	local events = Util.StealEvents(props)
 
 	local isOpen = scope:Value(false)
-	local buttonSize = scope:Value()
-	local dropdownSize = scope:Value()
+	local buttonSize = scope:Value(nil)
+	local dropdownSize = scope:Value(nil)
 	local triggerHover = scope:Value(false)
 
 	return {
@@ -80,7 +81,10 @@ return function<I, V>(baseScope: Fusion.Scope<any>, props: props<I, V>)
 					Size = UDim2.new(1, -45, 0, 20),
 					BackgroundTransparency = 1,
 					Text = Text,
-					TextColor = TextColor,
+					-- Literally a type solver moment
+					-- we already type casted TextColor,
+					-- SO WHY DO I NEED TO TYPE CAST IT AGAIN
+					TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
 					TextScaled = true,
 					FontWeight = FontWeight,
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -165,17 +169,17 @@ return function<I, V>(baseScope: Fusion.Scope<any>, props: props<I, V>)
 					AutomaticCanvasSize = Enum.AutomaticSize.Y,
 					CanvasSize = UDim2.new(),
 
-					[Fusion.Children] = {
+					[Fusion.Children] = Fusion.Child {
 						scope:New("UIListLayout") {},
 
 						--selene: allow(shadowing)
-						scope:ForPairs(Options, function(use, scope, index, value)
+						scope:ForPairs(Options, function(use, scope: typeof(scope), index, value)
 							return index,
 								scope:choice {
 									Size = UDim2.fromOffset(150, 42),
 									BackgroundColor = props.BackgroundColor,
 									Text = use(value),
-									TextColor = TextColor,
+									TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
 									FontWeight = scope:Computed(function(use)
 										if use(value) == use(Text) then
 											return Enum.FontWeight.Bold

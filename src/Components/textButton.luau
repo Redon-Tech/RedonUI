@@ -3,6 +3,7 @@ local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
+local types = require(RedonUI.types)
 
 local baseButton = require(RedonUI.Components.baseButton)
 local textLabel = require(RedonUI.Components.textLabel)
@@ -13,12 +14,12 @@ local Components = {
 
 export type props = baseButton.props & textLabel.props
 
-return function(baseScope: Fusion.Scope<any>, props: props)
-	local scope = Fusion.innerScope(baseScope, Fusion, Components, Util)
+return function(baseScope: types.Scope, props: props)
+	local scope = Fusion.innerScope(baseScope, Components)
 
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>
-	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>
+	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>?
+	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {
@@ -29,7 +30,7 @@ return function(baseScope: Fusion.Scope<any>, props: props)
 				Size = UDim2.fromScale(0.8, 1),
 				BackgroundTransparency = 1,
 				Text = Text,
-				TextColor = TextColor,
+				TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
 				TextScaled = true,
 				FontWeight = FontWeight,
 			},
