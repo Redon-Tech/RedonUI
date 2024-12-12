@@ -1,5 +1,6 @@
 local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
+local Util = require(RedonUI.Util)
 local uiLabs = require(RedonUI.Parent["ui-labs"])
 local theme = require(RedonUI.theme)
 
@@ -21,7 +22,7 @@ return uiLabs.CreateFusionStory({
 		FontWeight = uiLabs.Choose(theme.weights, 4),
 	},
 }, function(props: uiLabs.FusionProps)
-	local scope = Fusion.innerScope(props.scope, Components)
+	local scope = Fusion.innerScope(props.scope :: Fusion.Scope<typeof(Fusion)>, Util, Components)
 
 	return scope:base {
 		ClassName = "Frame",
@@ -39,7 +40,7 @@ return uiLabs.CreateFusionStory({
 
 		[Fusion.Children] = {
 			--selene: allow(shadowing)
-			scope:ForValues({ 1, 2 }, function(_, scope, value)
+			scope:ForValues({ 1, 2 }, function(_, scope: typeof(scope), value)
 				local text = scope:Value("test1")
 				return scope:dropdown {
 					Size = UDim2.fromOffset(150, 42),

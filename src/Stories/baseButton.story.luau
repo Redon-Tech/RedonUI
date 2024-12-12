@@ -1,5 +1,6 @@
 local RedonUI = script.Parent.Parent
 local Fusion = require(RedonUI.Parent.Fusion)
+local Util = require(RedonUI.Util)
 local uiLabs = require(RedonUI.Parent["ui-labs"])
 local theme = require(RedonUI.theme)
 
@@ -21,8 +22,7 @@ return uiLabs.CreateFusionStory({
 		Reactive = true,
 	},
 }, function(props: uiLabs.FusionProps)
-	local scope = Fusion.innerScope(props.scope, Components)
-	local _currentTheme = theme.theme:now()
+	local scope = Fusion.innerScope(props.scope :: Fusion.Scope<typeof(Fusion)>, Util, Components)
 
 	return scope:baseButton {
 		Parent = props.target,
