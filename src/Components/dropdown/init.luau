@@ -39,13 +39,13 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 
 	local DropdownHeight = Util.EatValue(props, "DropdownHeight") :: Fusion.UsedAs<number>
 
-	local Reactive = Util.EatValue(props, "Reactive")
-	local ButtonGlow = Util.EatValue(props, "ButtonGlow")
-	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor")
-	local MouseEnter = Util.EatValue(props, "MouseEnter")
-	local MouseLeave = Util.EatValue(props, "MouseLeave")
-	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down")
-	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up")
+	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
+	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
+	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor") :: Fusion.UsedAs<theme.colors>?
+	local MouseEnter = Util.EatValue(props, "MouseEnter") :: (() -> ())?
+	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
+	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
+	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up") :: (() -> ())?
 	local events = Util.StealEvents(props)
 
 	local isOpen = scope:Value(false)

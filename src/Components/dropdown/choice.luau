@@ -25,12 +25,10 @@ return function(baseScope: types.Scope, props: props)
 	if InitialBackgroundColor == nil then
 		InitialBackgroundColor = "crust"
 	end
-	print(InitialBackgroundColor)
 	local BackgroundColor = scope:Value(scope.peek(InitialBackgroundColor))
-	print(BackgroundColor)
 
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>?
+	local TextColor = Util.EatValue(props, "TextColor")
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 	local OnSelect = Util.EatValue(props, "OnSelect") :: () -> ()
 
@@ -64,7 +62,7 @@ return function(baseScope: types.Scope, props: props)
 		[Fusion.OnEvent "MouseLeave"] = function()
 			BackgroundColor:set(scope.peek(InitialBackgroundColor))
 		end,
-	}, {
+
 		[Fusion.Children] = {
 			scope:New("UIPadding") {
 				PaddingLeft = UDim.new(0, 9),

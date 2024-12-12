@@ -35,7 +35,7 @@ export type baseProps = {
 	ShadowColor: Fusion.UsedAs<theme.colors>?,
 }
 
-return Util.Component(function<T>(baseScope: types.Scope, props: baseProps & { ClassName: T })
+return function(baseScope: types.Scope, props: baseProps)
 	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
@@ -117,4 +117,4 @@ return Util.Component(function<T>(baseScope: types.Scope, props: baseProps & { C
 			props[Fusion.Children],
 		},
 	}, props))
-end)
+end

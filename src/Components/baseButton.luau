@@ -33,11 +33,13 @@ return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
-	if props.ForceSpeed ~= nil then
-		SPRING_SPEED = props.ForceSpeed
+	local ForceSpeed = Util.EatValue(props, "ForceSpeed") :: number?
+	local ForceDamping = Util.EatValue(props, "ForceDamping") :: number?
+	if ForceSpeed ~= nil then
+		SPRING_SPEED = ForceSpeed
 	end
-	if props.ForceDamping ~= nil then
-		SPRING_DAMPING = props.ForceDamping
+	if ForceDamping ~= nil then
+		SPRING_DAMPING = ForceDamping
 	end
 
 	local Parent = Util.EatValue(props, "Parent") :: Fusion.UsedAs<Instance>?
