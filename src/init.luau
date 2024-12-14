@@ -3,11 +3,14 @@ local types = require(script.types)
 export type Scope = types.Scope
 
 local components = script.Components
+local base = require(components.base)
+
+export type baseProps = base.baseProps
 
 return {
 	Components = {
 		-- Base
-		base = require(components.base),
+		base = base,
 		baseButton = require(components.baseButton),
 		textLabel = require(components.textLabel),
 		shadow = require(components.shadow),
