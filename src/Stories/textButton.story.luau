@@ -57,6 +57,7 @@ return uiLabs.CreateFusionStory({
 			-- Yes, this ignores type checking, but we KNOW that the value is a valid enum
 			return (Enum.FontWeight :: any)[use(props.controls.FontWeight)]
 		end),
+		TextScaled = true,
 
 		Reactive = true,
 	}

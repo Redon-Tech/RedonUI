@@ -20,6 +20,10 @@ return function(baseScope: types.Scope, props: props)
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
 	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>?
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
+	local TextScaled = Util.EatValue(props, "TextScaled") :: Fusion.UsedAs<boolean>?
+	local TextSize = Util.EatValue(props, "TextSize") :: Fusion.UsedAs<number>?
+	local TextXAlignment = Util.EatValue(props, "TextXAlignment") :: Fusion.UsedAs<Enum.TextXAlignment>?
+	local TextYAlignment = Util.EatValue(props, "TextYAlignment") :: Fusion.UsedAs<Enum.TextYAlignment>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {
@@ -31,8 +35,11 @@ return function(baseScope: types.Scope, props: props)
 				BackgroundTransparency = 1,
 				Text = Text,
 				TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
-				TextScaled = true,
+				TextScaled = TextScaled,
 				FontWeight = FontWeight,
+				TextSize = TextSize,
+				TextXAlignment = TextXAlignment,
+				TextYAlignment = TextYAlignment,
 			},
 		},
 	}))
