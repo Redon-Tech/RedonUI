@@ -1,7 +1,7 @@
 [package]
 name = "redon-tech/redon-ui"
 description = "RedonUI is a component library for Fusion using the catppuccin color pallet. Read more at the project homepage!"
-version = "0.1.0-alpha.3"
+version = "0.1.0-alpha.4"
 license = "MIT"
 authors = ["parker02311"]
 
