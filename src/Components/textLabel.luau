@@ -18,6 +18,7 @@ export type props = base.baseProps & {
 	TextSize: Fusion.UsedAs<number>?,
 	TextXAlignment: Fusion.UsedAs<Enum.TextXAlignment>?,
 	TextYAlignment: Fusion.UsedAs<Enum.TextYAlignment>?,
+	RichText: Fusion.UsedAs<boolean>?,
 }
 
 return function(baseScope: types.Scope, props: props)
@@ -50,5 +51,6 @@ return function(baseScope: types.Scope, props: props)
 				return currentTheme.font[Enum.FontWeight.SemiBold]
 			end
 		end),
+		RichText = props.RichText,
 	}))
 end
