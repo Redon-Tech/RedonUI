@@ -17,8 +17,8 @@ export type props = baseButton.props & {
 	SelectedCheckColor: Fusion.UsedAs<theme.colors>?,
 }
 
-local SPRING_SPEED = 25
-local SPRING_DAMPING = 0.5
+local SPRING_SPEED = 30
+local SPRING_DAMPING = 1
 
 return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
@@ -73,7 +73,7 @@ return function(baseScope: types.Scope, props: props)
 						end
 					end),
 					SPRING_SPEED,
-					SPRING_DAMPING
+					0.6
 				),
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://109702476150696",

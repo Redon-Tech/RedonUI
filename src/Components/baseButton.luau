@@ -26,8 +26,8 @@ export type props = base.baseProps & {
 	ForceDamping: number?,
 }
 
-local SPRING_SPEED = 20
-local SPRING_DAMPING = 0.5
+local SPRING_SPEED = 30
+local SPRING_DAMPING = 1
 
 return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
@@ -47,6 +47,8 @@ return function(baseScope: types.Scope, props: props)
 	local Size = Util.EatValue(props, "Size") :: Fusion.UsedAs<UDim2>?
 	local Position = Util.EatValue(props, "Position") :: Fusion.UsedAs<UDim2>?
 	local AnchorPoint = Util.EatValue(props, "AnchorPoint") :: Fusion.UsedAs<Vector2>?
+	local LayoutOrder = Util.EatValue(props, "LayoutOrder") :: Fusion.UsedAs<number>?
+	local ZIndex = Util.EatValue(props, "ZIndex") :: Fusion.UsedAs<number>?
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 
@@ -88,6 +90,8 @@ return function(baseScope: types.Scope, props: props)
 		Size = Size,
 		Position = Position,
 		AnchorPoint = AnchorPoint,
+		LayoutOrder = LayoutOrder,
+		ZIndex = ZIndex,
 
 		[Fusion.Children] = {
 			scope:base(scope.CombineProperties(props, {

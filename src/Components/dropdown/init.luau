@@ -23,7 +23,7 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 	DropdownHeight: Fusion.UsedAs<number>,
 }
 
-local SPRING_SPEED = 20
+local SPRING_SPEED = 30
 local SPRING_DAMPING = 1
 
 return function<I, V>(baseScope: types.Scope, props: props<I, V>)
@@ -62,7 +62,6 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			MouseLeave = MouseLeave,
 			MouseButton1Up = MouseButton1Up,
 			TriggerHover = triggerHover,
-			ForceDamping = 0.6,
 
 			[Fusion.Out "AbsoluteSize"] = buttonSize,
 
