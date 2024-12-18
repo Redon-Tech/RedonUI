@@ -18,6 +18,7 @@ export type baseProps = {
 	AnchorPoint: Fusion.UsedAs<Vector2>?,
 	Position: Fusion.UsedAs<UDim2>?,
 	Size: Fusion.UsedAs<UDim2>?,
+	AutomaticSize: Fusion.UsedAs<Enum.AutomaticSize>?,
 
 	BackgroundColor: Fusion.UsedAs<theme.colors>?,
 	BackgroundTransparency: Fusion.UsedAs<number>?,

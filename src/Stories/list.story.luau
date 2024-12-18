@@ -16,7 +16,11 @@ return uiLabs.CreateFusionStory({
 
 	local rows = {}
 	for i = 1, 100 do
-		rows[i] = `Row {i}`
+		local randomString = ""
+		for _ = 1, math.random(1, i * 10) do
+			randomString = randomString .. string.char(math.random(97, 122))
+		end
+		rows[i] = `Row {i}\n{randomString}`
 	end
 
 	return scope:table {
@@ -26,6 +30,7 @@ return uiLabs.CreateFusionStory({
 		Position = UDim2.fromScale(0.5, 0.5),
 
 		BackgroundColor = "base" :: theme.colors,
+		AutomaticSize = Enum.AutomaticSize.Y,
 
 		CornerRadius = UDim.new(0, 15),
 

@@ -28,6 +28,7 @@ return function(baseScope: types.Scope, props: props)
 	local Rows = scope.EatValue(props, "Rows") :: { [number]: Instance | string }
 
 	local RowSize = scope.EatValue(props, "RowSize") :: Fusion.UsedAs<UDim2>
+	local AutomaticSize = scope.EatValue(props, "AutomaticSize") :: Fusion.UsedAs<Enum.AutomaticSize>?
 
 	local AlternateColor = scope:Computed(function(use)
 		return if use(PrimaryColor) ~= "Alternate" then use(InitialAlternateColor) else use(props.BackgroundColor)
@@ -68,6 +69,8 @@ return function(baseScope: types.Scope, props: props)
 								BackgroundColor = scope:Computed(function(use)
 									return key % 2 == 0 and use(AlternateColor) or use(OriginalColor)
 								end),
+								AutomaticSize = AutomaticSize,
+								ClipsDescendants = true,
 
 								[Fusion.Children] = {
 									scope:Computed(function(_)
@@ -75,9 +78,12 @@ return function(baseScope: types.Scope, props: props)
 												and scope:textLabel {
 													Text = value,
 													Size = UDim2.fromScale(1, 1),
-													AnchorPoint = Vector2.new(0.5, 0.5),
-													Position = UDim2.fromScale(0.5, 0.5),
+													AnchorPoint = Vector2.new(0.5, 0),
+													Position = UDim2.fromScale(0.5, 0),
 													TextSize = 20,
+													TextWrapped = true,
+													FontWeight = Enum.FontWeight.Regular,
+													AutomaticSize = AutomaticSize,
 													RichText = true,
 												}
 											or value
