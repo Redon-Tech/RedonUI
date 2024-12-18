@@ -12,6 +12,7 @@ local Components = {
 }
 
 export type props = base.baseProps & {
+	PrimaryColor: Fusion.UsedAs<"Primary" | "Alternate">?,
 	AlternateColor: Fusion.UsedAs<theme.colors>?,
 	Rows: { [number]: Instance | string }?,
 
@@ -22,20 +23,22 @@ return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
-	local AlternateColor = scope.EatValue(props, "AlternateColor") :: Fusion.UsedAs<theme.colors>?
+	local PrimaryColor = scope.EatValue(props, "PrimaryColor") :: Fusion.UsedAs<"Primary" | "Alternate">?
+	local InitialAlternateColor = scope.EatValue(props, "AlternateColor") :: Fusion.UsedAs<theme.colors>?
 	local Rows = scope.EatValue(props, "Rows") :: { [number]: Instance | string }
 
 	local RowSize = scope.EatValue(props, "RowSize") :: Fusion.UsedAs<UDim2>
 
+	local AlternateColor = scope:Computed(function(use)
+		return if use(PrimaryColor) ~= "Alternate" then use(InitialAlternateColor) else use(props.BackgroundColor)
+	end)
+	local OriginalColor = scope:Computed(function(use)
+		return if use(PrimaryColor) ~= "Alternate" then use(props.BackgroundColor) else use(InitialAlternateColor)
+	end)
+
 	return scope:base(scope.CombineProperties({
 		ClassName = "CanvasGroup",
 		Name = `TableContainer<{props.Name}>`,
-		-- AutomaticCanvasSize = Enum.AutomaticSize.Y,
-		-- CanvasSize = UDim2.new(),
-		-- ScrollBarThickness = 3,
-		-- ScrollBarImageColor3 = currentTheme.colors.text,
-		-- TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-		-- BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
 
 		[Fusion.Children] = {
 			scope:New("ScrollingFrame") {
@@ -63,7 +66,7 @@ return function(baseScope: types.Scope, props: props)
 								ClassName = "Frame",
 								Size = RowSize,
 								BackgroundColor = scope:Computed(function(use)
-									return key % 2 == 0 and use(AlternateColor) or use(props.BackgroundColor)
+									return key % 2 == 0 and use(AlternateColor) or use(OriginalColor)
 								end),
 
 								[Fusion.Children] = {

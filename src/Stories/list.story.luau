@@ -4,7 +4,7 @@ local Util = require(RedonUI.Util)
 local uiLabs = require(RedonUI.Parent["ui-labs"])
 local theme = require(RedonUI.theme)
 
-local table = require(RedonUI.Components.table)
+local table = require(RedonUI.Components.list)
 local Components = {
 	table = table,
 }
@@ -32,5 +32,6 @@ return uiLabs.CreateFusionStory({
 		Rows = rows,
 		RowSize = UDim2.fromOffset(500, 50),
 		AlternateColor = "mantle" :: theme.colors,
+		PrimaryColor = "Alternate" :: "Primary" | "Alternate",
 	}
 end)
