@@ -59,13 +59,6 @@ return function(baseScope: types.Scope, props: baseProps)
 	local ShadowColor = Util.EatValue(props, "ShadowColor") :: Fusion.UsedAs<theme.colors>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
-		Name = props.Name,
-		Parent = props.Parent,
-
-		AnchorPoint = props.AnchorPoint,
-		Position = props.Position,
-		Size = props.Size,
-
 		BackgroundColor3 = scope:Computed(function(use)
 			if use(BackgroundColor) ~= nil then
 				return currentTheme.colors[use(BackgroundColor)]
@@ -73,8 +66,6 @@ return function(baseScope: types.Scope, props: baseProps)
 				return currentTheme.colors.white
 			end
 		end),
-		BackgroundTransparency = props.BackgroundTransparency,
-		Visible = props.Visible,
 
 		[Fusion.Children] = {
 			scope:Computed(function(use)
