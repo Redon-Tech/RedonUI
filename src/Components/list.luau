@@ -14,7 +14,7 @@ local Components = {
 export type props = base.baseProps & {
 	PrimaryColor: Fusion.UsedAs<"Primary" | "Alternate">?,
 	AlternateColor: Fusion.UsedAs<theme.colors>?,
-	Rows: { [number]: Instance | string }?,
+	Rows: { [number]: Fusion.Child | string }?,
 
 	RowSize: Fusion.UsedAs<UDim2>,
 }
@@ -61,7 +61,21 @@ return function(baseScope: types.Scope, props: props)
 					},
 
 					-- selene: allow(shadowing)
-					scope:ForPairs(Rows, function(_, scope: typeof(scope), key: number, value: Instance | string)
+					scope:ForPairs(Rows, function(_, scope: typeof(scope), key: number, value: Fusion.Child | string)
+						if typeof(scope.peek(value)) == "string" then
+							value = scope:textLabel {
+								Text = value :: string,
+								Size = UDim2.fromScale(1, 1),
+								AnchorPoint = Vector2.new(0.5, 0),
+								Position = UDim2.fromScale(0.5, 0),
+								TextSize = 20,
+								TextWrapped = true,
+								FontWeight = Enum.FontWeight.Regular,
+								AutomaticSize = AutomaticSize,
+								RichText = true,
+							}
+						end
+
 						return key,
 							scope:base {
 								ClassName = "Frame",
@@ -73,21 +87,7 @@ return function(baseScope: types.Scope, props: props)
 								ClipsDescendants = true,
 
 								[Fusion.Children] = {
-									scope:Computed(function(_)
-										return typeof(value) == "string"
-												and scope:textLabel {
-													Text = value,
-													Size = UDim2.fromScale(1, 1),
-													AnchorPoint = Vector2.new(0.5, 0),
-													Position = UDim2.fromScale(0.5, 0),
-													TextSize = 20,
-													TextWrapped = true,
-													FontWeight = Enum.FontWeight.Regular,
-													AutomaticSize = AutomaticSize,
-													RichText = true,
-												}
-											or value
-									end),
+									value,
 								},
 							}
 					end),
