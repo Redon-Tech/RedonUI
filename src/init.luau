@@ -14,6 +14,7 @@ return {
 		baseButton = require(components.baseButton),
 		textLabel = require(components.textLabel),
 		shadow = require(components.shadow),
+		list = require(components.list),
 
 		-- Buttons
 		textButton = require(components.textButton),
