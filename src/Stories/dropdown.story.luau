@@ -27,7 +27,7 @@ return uiLabs.CreateFusionStory({
 	return scope:base {
 		ClassName = "Frame",
 		Parent = props.target,
-		Size = UDim2.fromOffset(250, 250),
+		Size = UDim2.fromOffset(250, 375),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 
@@ -40,12 +40,17 @@ return uiLabs.CreateFusionStory({
 
 		[Fusion.Children] = {
 			--selene: allow(shadowing)
-			scope:ForValues({ 1, 2 }, function(_, scope: typeof(scope), value)
+			scope:ForValues({ 1, 2, 3 }, function(_, scope: typeof(scope), value)
 				local text = scope:Value("test1")
 				return scope:dropdown {
 					Size = UDim2.fromOffset(150, 42),
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.new(0.5, 0, 0.5, if value == 2 then 40 else -40),
+					AnchorPoint = Vector2.new(if value == 1 then 0 elseif value == 2 then 0.5 else 1, 0.5),
+					Position = UDim2.new(
+						if value == 1 then 0 elseif value == 2 then 0.5 else 1,
+						0,
+						0.5,
+						if value == 3 then 100 elseif value == 2 then 0 else -100
+					),
 					DropdownHeight = 126,
 
 					BackgroundColor = props.controls.BackgroundColor,

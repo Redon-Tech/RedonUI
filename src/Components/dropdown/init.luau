@@ -21,6 +21,7 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 	OnOptionSelected: (I, V) -> (),
 
 	DropdownHeight: Fusion.UsedAs<number>,
+	DropdownYOffset: Fusion.UsedAs<number>?,
 }
 
 local SPRING_SPEED = 30
@@ -38,6 +39,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local OnOptionSelected = Util.EatValue(props, "OnOptionSelected") :: (I, V) -> ()
 
 	local DropdownHeight = Util.EatValue(props, "DropdownHeight") :: Fusion.UsedAs<number>
+	local DropdownYOffset = Util.EatValue(props, "DropdownYOffset") :: Fusion.UsedAs<number>?
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
@@ -96,6 +98,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 					Size = UDim2.fromOffset(20, 12),
 					BackgroundTransparency = 1,
 					Image = "rbxassetid://110726366161984",
+					ImageColor3 = currenTheme.colors.text,
 					Rotation = scope:Spring(
 						scope:Computed(function(use)
 							return use(isOpen) and 180 or 0
@@ -108,8 +111,8 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			},
 		}, events)),
 
-		scope:base(scope.CombineProperties(props, {
-			ClassName = "CanvasGroup",
+		scope:base {
+			ClassName = "Frame",
 			Name = `DropdownFrame<{props.Name}>`,
 			AnchorPoint = scope:Computed(function(use)
 				local baseAnchorPoint = use(props.AnchorPoint) :: Vector2?
@@ -122,83 +125,108 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			Position = scope:Computed(function(use)
 				local basePosition = use(props.Position) :: UDim2?
 				local baseSize = use(buttonSize) :: Vector2?
+				local additionalYOffset = use(DropdownYOffset) :: number?
 				if basePosition ~= nil and baseSize ~= nil then
-					return basePosition + UDim2.fromOffset(0, (baseSize.Y / 2) + 5)
+					return basePosition + UDim2.fromOffset(0, (baseSize.Y / 2) + 5 + (additionalYOffset or 0))
 				elseif baseSize ~= nil then
-					return UDim2.fromOffset(0, (baseSize.Y / 2) + 5)
+					return UDim2.fromOffset(0, (baseSize.Y / 2) + 5 + (additionalYOffset or 0))
 				end
 
 				return UDim2.fromOffset(0, 0)
 			end),
 			Size = scope:Spring(
 				scope:Computed(function(use)
-					local baseSize = use(buttonSize) :: Vector2?
+					local baseSize = use(props.Size) :: UDim2?
 					if use(isOpen) and baseSize ~= nil then
-						return UDim2.fromOffset(baseSize.X, use(DropdownHeight))
-					else
-						return UDim2.fromOffset(0, 0)
+						return UDim2.new(baseSize.X, UDim.new(0, use(DropdownHeight)))
+					elseif baseSize ~= nil then
+						return UDim2.new(baseSize.X, UDim.new())
 					end
+
+					return UDim2.new()
 				end),
 				SPRING_SPEED,
 				SPRING_DAMPING
 			),
 			ZIndex = 2,
-			[Fusion.Out "AbsoluteSize"] = dropdownSize,
-
-			Visible = scope:Computed(function(use)
-				local size = use(dropdownSize) :: Vector2?
-				if size ~= nil and size.Y > 0 then
-					return true
-				end
-
-				return false
-			end),
+			BackgroundTransparency = 1,
 
 			[Fusion.Children] = {
-				scope:New("ScrollingFrame") {
-					Name = "Options",
-					BackgroundTransparency = 1,
-					Size = UDim2.fromScale(1, 1),
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					ScrollBarThickness = 3,
-					ScrollBarImageColor3 = currenTheme.colors.text,
-					TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-					BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-					AutomaticCanvasSize = Enum.AutomaticSize.Y,
-					CanvasSize = UDim2.new(),
-
-					[Fusion.Children] = Fusion.Child {
-						scope:New("UIListLayout") {},
-
-						--selene: allow(shadowing)
-						scope:ForPairs(Options, function(use, scope: typeof(scope), index, value)
-							return index,
-								scope:choice {
-									Size = UDim2.fromOffset(150, 42),
-									BackgroundColor = props.BackgroundColor,
-									Text = use(value),
-									TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
-									FontWeight = scope:Computed(function(use)
-										if use(value) == use(Text) then
-											return Enum.FontWeight.Bold
-										else
-											return Enum.FontWeight.Regular
-										end
-									end),
-									OnSelect = function()
-										triggerHover:set(true)
-										OnOptionSelected(index, use(value))
-										isOpen:set(false)
-										task.delay(0.15, function()
-											triggerHover:set(false)
-										end)
-									end,
-								}
+				scope:base(scope.CombineProperties(props, {
+					ClassName = "CanvasGroup",
+					AnchorPoint = Vector2.new(0.5, 0),
+					Position = UDim2.fromScale(0.5, 0),
+					Size = scope:Spring(
+						scope:Computed(function(use)
+							local baseSize = use(props.Size) :: UDim2?
+							if use(isOpen) and baseSize ~= nil then
+								return UDim2.fromScale(1, 1)
+							else
+								return UDim2.fromScale(0, 0)
+							end
 						end),
+						SPRING_SPEED,
+						SPRING_DAMPING
+					),
+
+					[Fusion.Out "AbsoluteSize"] = dropdownSize,
+
+					Visible = scope:Computed(function(use)
+						local size = use(dropdownSize) :: Vector2?
+						if size ~= nil and size.Y > 0 then
+							return true
+						end
+
+						return false
+					end),
+
+					[Fusion.Children] = {
+						scope:New("ScrollingFrame") {
+							Name = "Options",
+							BackgroundTransparency = 1,
+							Size = UDim2.fromScale(1, 1),
+							AnchorPoint = Vector2.new(0.5, 0.5),
+							Position = UDim2.fromScale(0.5, 0.5),
+							ScrollBarThickness = 3,
+							ScrollBarImageColor3 = currenTheme.colors.text,
+							TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+							BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+							AutomaticCanvasSize = Enum.AutomaticSize.Y,
+							CanvasSize = UDim2.new(),
+
+							[Fusion.Children] = Fusion.Child {
+								scope:New("UIListLayout") {},
+
+								--selene: allow(shadowing)
+								scope:ForPairs(Options, function(use, scope: typeof(scope), index, value)
+									return index,
+										scope:choice {
+											Size = UDim2.fromOffset(150, 42),
+											BackgroundColor = props.BackgroundColor,
+											Text = use(value),
+											TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
+											FontWeight = scope:Computed(function(use)
+												if use(value) == use(Text) then
+													return Enum.FontWeight.Bold
+												else
+													return Enum.FontWeight.Regular
+												end
+											end),
+											OnSelect = function()
+												triggerHover:set(true)
+												OnOptionSelected(index, use(value))
+												isOpen:set(false)
+												task.delay(0.15, function()
+													triggerHover:set(false)
+												end)
+											end,
+										}
+								end),
+							},
+						},
 					},
-				},
+				})),
 			},
-		})),
+		},
 	}
 end
