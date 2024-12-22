@@ -8,6 +8,8 @@ authors = ["parker02311"]
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
+exclude = ["RedonUI.rbxl", "RedonUI.rbxl.lock"]
+
 [dependencies]
 Fusion = "elttob/fusion@0.3.0"
 ui-labs = "pepeeltoro41/ui-labs@2.3.0"
