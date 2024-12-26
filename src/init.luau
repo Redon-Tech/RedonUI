@@ -4,8 +4,11 @@ export type Scope = types.Scope
 
 local components = script.Components
 local base = require(components.base)
+local theme = require(script.theme)
 
 export type baseProps = base.baseProps
+export type colors = theme.colors
+export type fontWeights = theme.fontWeights
 
 return {
 	Components = {
@@ -25,6 +28,6 @@ return {
 		checkBox = require(components.checkBox),
 		dropdown = require(components.dropdown),
 	},
-	theme = require(script.theme),
+	theme = theme,
 	Util = require(script.Util),
 }
