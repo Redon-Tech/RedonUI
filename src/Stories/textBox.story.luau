@@ -24,6 +24,7 @@ return uiLabs.CreateFusionStory({
 	},
 }, function(props: uiLabs.FusionProps)
 	local scope = Fusion.innerScope(props.scope :: Fusion.Scope<typeof(Fusion)>, Util, Components)
+	local currentTheme = theme.theme:now()
 
 	return scope:textBox {
 		Parent = props.target,
@@ -31,7 +32,9 @@ return uiLabs.CreateFusionStory({
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 
-		BackgroundColor = props.controls.BackgroundColor,
+		BackgroundColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.BackgroundColor)]
+		end),
 		Border = props.controls.Border,
 		CornerRadius = scope:Computed(function(use)
 			return UDim.new(0, use(props.controls.CornerRadius))
@@ -42,8 +45,12 @@ return uiLabs.CreateFusionStory({
 
 		Text = props.controls.Text,
 		PlaceholderText = props.controls.PlaceholderText,
-		TextColor = props.controls.TextColor,
-		PlaceholderColor = props.controls.PlaceHolderColor,
+		TextColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.TextColor)]
+		end),
+		PlaceholderColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.PlaceHolderColor)]
+		end),
 		FontWeight = scope:Computed(function(use)
 			-- Yes, this ignores type checking, but we KNOW that the value is a valid enum
 			return (Enum.FontWeight :: any)[use(props.controls.FontWeight)]

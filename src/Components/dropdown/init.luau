@@ -17,6 +17,11 @@ local Components = {
 }
 
 export type props<I, V> = baseButton.props & textLabel.props & {
+	Size: Fusion.UsedAs<UDim2>?,
+	AnchorPoint: Fusion.UsedAs<Vector2>?,
+	Position: Fusion.UsedAs<UDim2>?,
+	BackgroundColor3: Fusion.UsedAs<Color3>?,
+
 	Options: Fusion.UsedAs<{ [I]: V }>,
 	OnOptionSelected: (I, V) -> (),
 
@@ -32,7 +37,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local currenTheme = theme.theme:now()
 
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor = Util.EatValue(props, "TextColor") :: Fusion.UsedAs<theme.colors>?
+	local TextColor3 = Util.EatValue(props, "TextColor3") :: Fusion.UsedAs<Color3>?
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 
 	local Options = Util.EatValue(props, "Options") :: Fusion.UsedAs<{ [I]: V }>
@@ -43,7 +48,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
-	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor") :: Fusion.UsedAs<theme.colors>?
+	local ButtonGlowColor3 = Util.EatValue(props, "ButtonGlowColor3") :: Fusion.UsedAs<Color3>?
 	local MouseEnter = Util.EatValue(props, "MouseEnter") :: (() -> ())?
 	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
 	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
@@ -59,7 +64,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 		scope:baseButton(scope.CombineProperties(props, {
 			Reactive = Reactive,
 			ButtonGlow = ButtonGlow,
-			ButtonGlowColor = ButtonGlowColor,
+			ButtonGlowColor3 = ButtonGlowColor3,
 			MouseEnter = MouseEnter,
 			MouseLeave = MouseLeave,
 			MouseButton1Up = MouseButton1Up,
@@ -82,10 +87,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 					Size = UDim2.new(1, -45, 0, 20),
 					BackgroundTransparency = 1,
 					Text = Text,
-					-- Literally a type solver moment
-					-- we already type casted TextColor,
-					-- SO WHY DO I NEED TO TYPE CAST IT AGAIN
-					TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
+					TextColor3 = TextColor3,
 					TextScaled = true,
 					FontWeight = FontWeight,
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -202,9 +204,9 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 									return index,
 										scope:choice {
 											Size = UDim2.fromOffset(150, 42),
-											BackgroundColor = props.BackgroundColor,
+											BackgroundColor3 = props.BackgroundColor3,
 											Text = use(value),
-											TextColor = TextColor :: Fusion.UsedAs<theme.colors>?,
+											TextColor3 = TextColor3,
 											FontWeight = scope:Computed(function(use)
 												if use(value) == use(Text) then
 													return Enum.FontWeight.Bold

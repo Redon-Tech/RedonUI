@@ -19,6 +19,7 @@ return uiLabs.CreateFusionStory({
 	},
 }, function(props: uiLabs.FusionProps)
 	local scope = Fusion.innerScope(props.scope :: Fusion.Scope<typeof(Fusion)>, Util, Components)
+	local currentTheme = theme.theme:now()
 
 	return scope:checkBox {
 		Parent = props.target,
@@ -26,15 +27,21 @@ return uiLabs.CreateFusionStory({
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 
-		BackgroundColor = props.controls.BackgroundColor,
+		BackgroundColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.BackgroundColor)]
+		end),
 		Border = 1,
 		CornerRadius = UDim.new(0, 10),
 		Shadow = false,
 		ButtonGlow = false,
 
 		Enabled = props.controls.Enabled,
-		SelectedColor = props.controls.SelectedColor,
-		SelectedCheckColor = props.controls.SelectedCheckColor,
+		SelectedColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.SelectedColor)]
+		end),
+		SelectedCheckColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.SelectedCheckColor)]
+		end),
 
 		Reactive = true,
 

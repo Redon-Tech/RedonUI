@@ -12,37 +12,33 @@ local Components = {
 
 export type props = base.baseProps & {
 	Text: Fusion.UsedAs<string>,
-	TextColor: Fusion.UsedAs<theme.colors>?,
+	TextColor3: Fusion.UsedAs<Color3>?,
 	FontWeight: Fusion.UsedAs<Enum.FontWeight>?,
 	OnSelect: () -> (),
+
+	TextColor: nil,
 }
 
 return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
 	local currentTheme = theme.theme:now()
 
-	local InitialBackgroundColor = Util.EatValue(props, "BackgroundColor") :: Fusion.UsedAs<theme.colors>
-	if InitialBackgroundColor == nil then
-		InitialBackgroundColor = "crust"
+	local InitialBackgroundColor3 = Util.EatValue(props, "BackgroundColor3") :: Fusion.UsedAs<Color3>
+	if InitialBackgroundColor3 == nil then
+		InitialBackgroundColor3 = currentTheme.colors.crust
 	end
-	local BackgroundColor = scope:Value(scope.peek(InitialBackgroundColor))
+	local BackgroundColor3: Fusion.Value<Color3> = scope:Value(scope.peek(InitialBackgroundColor3))
 
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor = Util.EatValue(props, "TextColor")
+	local TextColor3 = Util.EatValue(props, "TextColor3") :: Fusion.UsedAs<Color3>?
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 	local OnSelect = Util.EatValue(props, "OnSelect") :: () -> ()
 
 	return scope:base(scope.CombineProperties(props, {
 		ClassName = "TextButton",
-		BackgroundColor = BackgroundColor,
+		BackgroundColor3 = BackgroundColor3,
 		Text = Text,
-		TextColor3 = scope:Computed(function(use)
-			if use(TextColor) ~= nil then
-				return currentTheme.colors[use(TextColor)]
-			else
-				return currentTheme.colors.text
-			end
-		end),
+		TextColor3 = TextColor3 or currentTheme.colors.text,
 		FontFace = scope:Computed(function(use)
 			if use(FontWeight) ~= nil then
 				return currentTheme.font[use(FontWeight)]
@@ -56,11 +52,11 @@ return function(baseScope: types.Scope, props: props)
 		[Fusion.OnEvent "Activated"] = OnSelect,
 
 		[Fusion.OnEvent "MouseEnter"] = function()
-			BackgroundColor:set("surface0")
+			BackgroundColor3:set(currentTheme.colors.surface0)
 		end,
 
 		[Fusion.OnEvent "MouseLeave"] = function()
-			BackgroundColor:set(scope.peek(InitialBackgroundColor))
+			BackgroundColor3:set(scope.peek(InitialBackgroundColor3))
 		end,
 
 		[Fusion.Children] = {

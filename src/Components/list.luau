@@ -12,12 +12,17 @@ local Components = {
 }
 
 export type props = base.baseProps & {
+	Name: Fusion.UsedAs<string>?,
+	BackgroundColor3: Fusion.UsedAs<Color3>?,
+
 	PrimaryColor: Fusion.UsedAs<"Primary" | "Alternate">?,
-	AlternateColor: Fusion.UsedAs<theme.colors>?,
+	AlternateColor3: Fusion.UsedAs<Color3>,
 	Rows: Fusion.UsedAs<{ [number]: Fusion.Child | string }>,
 	CanvasGroup: boolean?,
 
 	RowSize: Fusion.UsedAs<UDim2>,
+
+	AlternateColor: nil,
 }
 
 return function(baseScope: types.Scope, props: props)
@@ -25,7 +30,7 @@ return function(baseScope: types.Scope, props: props)
 	local currentTheme = theme.theme:now()
 
 	local PrimaryColor = scope.EatValue(props, "PrimaryColor") :: Fusion.UsedAs<"Primary" | "Alternate">?
-	local InitialAlternateColor = scope.EatValue(props, "AlternateColor") :: Fusion.UsedAs<theme.colors>?
+	local InitialAlternateColor3 = scope.EatValue(props, "AlternateColor3") :: Fusion.UsedAs<Color3>?
 	local Rows = scope.EatValue(props, "Rows") :: Fusion.UsedAs<{ [number]: Fusion.Child | string }>
 	local CanvasGroup = scope.EatValue(props, "CanvasGroup") :: boolean?
 
@@ -33,10 +38,10 @@ return function(baseScope: types.Scope, props: props)
 	local AutomaticSize = scope.EatValue(props, "AutomaticSize") :: Fusion.UsedAs<Enum.AutomaticSize>?
 
 	local AlternateColor = scope:Computed(function(use)
-		return if use(PrimaryColor) ~= "Alternate" then use(InitialAlternateColor) else use(props.BackgroundColor)
+		return if use(PrimaryColor) ~= "Alternate" then use(InitialAlternateColor3) else use(props.BackgroundColor3)
 	end)
 	local OriginalColor = scope:Computed(function(use)
-		return if use(PrimaryColor) ~= "Alternate" then use(props.BackgroundColor) else use(InitialAlternateColor)
+		return if use(PrimaryColor) ~= "Alternate" then use(props.BackgroundColor3) else use(InitialAlternateColor3)
 	end)
 
 	return scope:base(scope.CombineProperties({
@@ -82,7 +87,7 @@ return function(baseScope: types.Scope, props: props)
 							scope:base {
 								ClassName = "Frame",
 								Size = RowSize,
-								BackgroundColor = scope:Computed(function(use)
+								BackgroundColor3 = scope:Computed(function(use)
 									return key % 2 == 0 and use(AlternateColor) or use(OriginalColor)
 								end),
 								AutomaticSize = AutomaticSize,

@@ -13,8 +13,11 @@ local Components = {
 
 export type props = baseButton.props & {
 	Enabled: Fusion.UsedAs<boolean>,
-	SelectedColor: Fusion.UsedAs<theme.colors>?,
-	SelectedCheckColor: Fusion.UsedAs<theme.colors>?,
+	SelectedColor3: Fusion.UsedAs<Color3>?,
+	SelectedCheckColor3: Fusion.UsedAs<Color3>?,
+
+	SelectedColor: nil,
+	SelectedCheckColor: nil,
 }
 
 local SPRING_SPEED = 30
@@ -25,8 +28,8 @@ return function(baseScope: types.Scope, props: props)
 	local currentTheme = theme.theme:now()
 
 	local Enabled = scope.EatValue(props, "Enabled") :: Fusion.UsedAs<boolean>
-	local SelectedColor = scope.EatValue(props, "SelectedColor") :: Fusion.UsedAs<theme.colors>?
-	local SelectedCheckColor = scope.EatValue(props, "SelectedCheckColor") :: Fusion.UsedAs<theme.colors>?
+	local SelectedColor3 = scope.EatValue(props, "SelectedColor3") :: Fusion.UsedAs<Color3>?
+	local SelectedCheckColor3 = scope.EatValue(props, "SelectedCheckColor3") :: Fusion.UsedAs<Color3>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {
@@ -45,7 +48,7 @@ return function(baseScope: types.Scope, props: props)
 				),
 				Position = UDim2.fromScale(0.5, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				BackgroundColor = SelectedColor :: Fusion.UsedAs<theme.colors>?,
+				BackgroundColor3 = SelectedColor3,
 				CornerRadius = props.CornerRadius,
 			},
 
@@ -77,13 +80,7 @@ return function(baseScope: types.Scope, props: props)
 				),
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://109702476150696",
-				ImageColor3 = scope:Computed(function(use)
-					if use(SelectedCheckColor) ~= nil then
-						return currentTheme.colors[use(SelectedCheckColor)]
-					else
-						return currentTheme.colors.text
-					end
-				end),
+				ImageColor3 = SelectedCheckColor3 or currentTheme.colors.text,
 				Visible = Enabled,
 				ScaleType = Enum.ScaleType.Fit,
 

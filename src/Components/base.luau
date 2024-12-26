@@ -10,30 +10,23 @@ local Components = {
 	shadow = shadow,
 }
 
-export type baseProps = {
+export type baseProps = shadow.props & {
 	ClassName: string?,
-	Name: Fusion.UsedAs<string>?,
-	Parent: Fusion.UsedAs<Instance>?,
-
-	AnchorPoint: Fusion.UsedAs<Vector2>?,
-	Position: Fusion.UsedAs<UDim2>?,
-	Size: Fusion.UsedAs<UDim2>?,
-	AutomaticSize: Fusion.UsedAs<Enum.AutomaticSize>?,
-
-	BackgroundColor: Fusion.UsedAs<theme.colors>?,
-	BackgroundTransparency: Fusion.UsedAs<number>?,
-	Visible: Fusion.UsedAs<boolean>?,
 
 	Gradient: Fusion.UsedAs<ColorSequence>?,
 	GradientTransparency: Fusion.UsedAs<NumberSequence>?,
 	GradientRotation: Fusion.UsedAs<number>?,
 
 	Border: Fusion.UsedAs<number>?,
-	BorderColor: Fusion.UsedAs<theme.colors>?,
+	BorderColor3: Fusion.UsedAs<Color3>?,
 	CornerRadius: Fusion.UsedAs<UDim>?,
 
 	Shadow: Fusion.UsedAs<boolean>?,
-	ShadowColor: Fusion.UsedAs<theme.colors>?,
+
+	[Fusion.SpecialKey]: unknown,
+
+	BackgroundColor: nil,
+	BorderColor: nil,
 }
 
 return function(baseScope: types.Scope, props: baseProps)
@@ -45,28 +38,18 @@ return function(baseScope: types.Scope, props: baseProps)
 		ClassName = "Frame"
 	end
 
-	local BackgroundColor = Util.EatValue(props, "BackgroundColor") :: Fusion.UsedAs<theme.colors>?
-
 	local Gradient = Util.EatValue(props, "Gradient") :: Fusion.UsedAs<ColorSequence>?
 	local GradientTransparency = Util.EatValue(props, "GradientTransparency") :: Fusion.UsedAs<NumberSequence>?
 	local GradientRotation = Util.EatValue(props, "GradientRotation") :: Fusion.UsedAs<number>?
 
 	local Border = Util.EatValue(props, "Border") :: Fusion.UsedAs<number>?
-	local BorderColor = Util.EatValue(props, "BorderColor") :: Fusion.UsedAs<theme.colors>?
+	local BorderColor3 = Util.EatValue(props, "BorderColor3") :: Fusion.UsedAs<Color3>?
 	local CornerRadius = Util.EatValue(props, "CornerRadius") :: Fusion.UsedAs<UDim>?
 
 	local Shadow = Util.EatValue(props, "Shadow") :: Fusion.UsedAs<boolean>?
-	local ShadowColor = Util.EatValue(props, "ShadowColor") :: Fusion.UsedAs<theme.colors>?
+	local ShadowColor3 = Util.EatValue(props, "ShadowColor3") :: Fusion.UsedAs<Color3>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
-		BackgroundColor3 = scope:Computed(function(use)
-			if use(BackgroundColor) ~= nil then
-				return currentTheme.colors[use(BackgroundColor)]
-			else
-				return currentTheme.colors.white
-			end
-		end),
-
 		[Fusion.Children] = {
 			scope:Computed(function(use)
 				return if use(CornerRadius) ~= nil
@@ -80,9 +63,7 @@ return function(baseScope: types.Scope, props: baseProps)
 				return if use(Border) ~= nil
 					then scope:New("UIStroke") {
 						Thickness = use(Border),
-						Color = if use(BorderColor) ~= nil
-							then currentTheme.colors[use(BorderColor)]
-							else currentTheme.colors.white,
+						Color = BorderColor3 or currentTheme.colors.white,
 						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 					}
 					else nil
@@ -101,12 +82,12 @@ return function(baseScope: types.Scope, props: baseProps)
 			scope:Computed(function(use)
 				return if use(Shadow) == true
 					then scope:shadow {
-						ShadowColor = use(ShadowColor),
+						ShadowColor3 = ShadowColor3,
 					}
 					else nil
 			end),
 
-			props[Fusion.Children],
+			props[Fusion.Children] :: any,
 		},
 	}, props))
 end

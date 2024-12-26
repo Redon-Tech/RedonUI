@@ -47,12 +47,18 @@ return uiLabs.CreateFusionStory({
 			return UDim.new(0, use(props.controls.CornerRadius))
 		end),
 		Shadow = props.controls.Shadow,
-		ShadowColor = props.controls.ShadowColor,
+		ShadowColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.ShadowColor)]
+		end),
 		ButtonGlow = props.controls.ButtonGlow,
-		ButtonGlowColor = props.controls.ButtonGlowColor,
+		ButtonGlowColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.ButtonGlowColor)]
+		end),
 
 		Text = props.controls.Text,
-		TextColor = props.controls.TextColor,
+		TextColor3 = scope:Computed(function(use)
+			return currentTheme.colors[use(props.controls.TextColor)]
+		end),
 		FontWeight = scope:Computed(function(use)
 			-- Yes, this ignores type checking, but we KNOW that the value is a valid enum
 			return (Enum.FontWeight :: any)[use(props.controls.FontWeight)]

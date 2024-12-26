@@ -2,7 +2,6 @@ local RedonUI = script.Parent.Parent
 
 local Fusion = require(RedonUI.Parent.Fusion)
 local Util = require(RedonUI.Util)
-local theme = require(RedonUI.theme)
 local types = require(RedonUI.types)
 
 local base = require(RedonUI.Components.base)
@@ -11,19 +10,25 @@ local Components = {
 }
 
 export type props = base.baseProps & {
+	Name: Fusion.UsedAs<string>?,
+	AutomaticSize: Fusion.UsedAs<Enum.AutomaticSize>?,
+	Visible: Fusion.UsedAs<boolean>?,
+
 	MouseEnter: (() -> ())?,
 	MouseLeave: (() -> ())?,
 	MouseButton1Down: (() -> ())?,
 	MouseButton1Up: (() -> ())?,
 
 	ButtonGlow: Fusion.UsedAs<boolean>?,
-	ButtonGlowColor: Fusion.UsedAs<theme.colors>?,
+	ButtonGlowColor3: Fusion.UsedAs<Color3>?,
 
 	Reactive: Fusion.UsedAs<boolean>?,
 	TriggerHover: Fusion.UsedAs<boolean>?,
 
 	ForceSpeed: number?,
 	ForceDamping: number?,
+
+	ButtonGlowColor: nil,
 }
 
 local SPRING_SPEED = 30
@@ -31,7 +36,6 @@ local SPRING_DAMPING = 1
 
 return function(baseScope: types.Scope, props: props)
 	local scope = Fusion.innerScope(baseScope, Components)
-	local currentTheme = theme.theme:now()
 
 	local ForceSpeed = Util.EatValue(props, "ForceSpeed") :: number?
 	local ForceDamping = Util.EatValue(props, "ForceDamping") :: number?
@@ -53,7 +57,7 @@ return function(baseScope: types.Scope, props: props)
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
-	local ButtonGlowColor = Util.EatValue(props, "ButtonGlowColor") :: Fusion.UsedAs<theme.colors>?
+	local ButtonGlowColor3 = Util.EatValue(props, "ButtonGlowColor3") :: Fusion.UsedAs<Color3>?
 
 	local MouseEnter = Util.EatValue(props, "MouseEnter") :: (() -> ())?
 	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
@@ -154,12 +158,7 @@ return function(baseScope: types.Scope, props: props)
 								BackgroundTransparency = 1,
 								ImageTransparency = 0.3,
 								Image = "rbxassetid://131257669960828",
-								-- selene: allow(shadowing)
-								ImageColor3 = scope:Computed(function(use)
-									return if use(ButtonGlowColor) ~= nil
-										then currentTheme.colors[use(ButtonGlowColor)]
-										else Color3.new(1, 1, 1)
-								end),
+								ImageColor3 = ButtonGlowColor3 or Color3.new(1, 1, 1),
 								AnchorPoint = Vector2.new(0.5, 0.5),
 								Position = UDim2.fromScale(0.5, 0.5),
 								Size = UDim2.fromScale(1, 1),
@@ -177,7 +176,7 @@ return function(baseScope: types.Scope, props: props)
 
 									-- selene: allow(shadowing)
 									scope:Computed(function(use)
-										return if use(props.Gradient) ~= nil and use(ButtonGlowColor) == nil
+										return if use(props.Gradient) ~= nil and use(ButtonGlowColor3) == nil
 											then scope:New("UIGradient") {
 												Color = use(props.Gradient),
 												Transparency = use(props.GradientTransparency),

@@ -13,6 +13,7 @@ return uiLabs.CreateFusionStory({
 	fusion = Fusion,
 }, function(props: uiLabs.FusionProps)
 	local scope = Fusion.innerScope(props.scope :: Fusion.Scope<typeof(Fusion)>, Util, Components)
+	local currentTheme = theme.theme:now()
 
 	local rows = {}
 	for i = 1, 100 do
@@ -29,14 +30,14 @@ return uiLabs.CreateFusionStory({
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 
-		BackgroundColor = "base" :: theme.colors,
+		BackgroundColor3 = currentTheme.colors.base,
 		AutomaticSize = Enum.AutomaticSize.Y,
 
 		CornerRadius = UDim.new(0, 15),
 
 		Rows = rows,
 		RowSize = UDim2.fromOffset(500, 50),
-		AlternateColor = "mantle" :: theme.colors,
+		AlternateColor3 = currentTheme.colors.mantle,
 		PrimaryColor = "Alternate" :: "Primary" | "Alternate",
 	}
 end)

@@ -14,7 +14,9 @@ local Components = {
 
 export type props = baseButton.props & {
 	Image: Fusion.UsedAs<string>,
-	ImageColor: Fusion.UsedAs<theme.colors>?,
+	ImageColor3: Fusion.UsedAs<Color3>?,
+
+	ImageColor: nil,
 }
 
 return function(baseScope: types.Scope, props: props)
@@ -22,7 +24,7 @@ return function(baseScope: types.Scope, props: props)
 	local currentTheme = theme.theme:now()
 
 	local Image = Util.EatValue(props, "Image") :: Fusion.UsedAs<string>
-	local ImageColor = Util.EatValue(props, "ImageColor") :: Fusion.UsedAs<theme.colors>?
+	local ImageColor3 = Util.EatValue(props, "ImageColor3") :: Fusion.UsedAs<Color3>?
 
 	return scope:baseButton(scope.CombineProperties(props, {
 		[Fusion.Children] = {
@@ -33,13 +35,7 @@ return function(baseScope: types.Scope, props: props)
 				Size = UDim2.new(0.75, 0, 0.75, 0),
 				BackgroundTransparency = 1,
 				Image = Image,
-				ImageColor3 = scope:Computed(function(use)
-					if use(ImageColor) ~= nil then
-						return currentTheme.colors[use(ImageColor)]
-					else
-						return currentTheme.colors.text
-					end
-				end),
+				ImageColor3 = ImageColor3 or currentTheme.colors.text,
 				ScaleType = Enum.ScaleType.Fit,
 
 				ZIndex = 1,
