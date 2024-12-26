@@ -92,6 +92,8 @@ return function(baseScope: types.Scope, props: props)
 		AnchorPoint = AnchorPoint,
 		LayoutOrder = LayoutOrder,
 		ZIndex = ZIndex,
+		AutomaticSize = props.AutomaticSize,
+		Visible = props.Visible,
 
 		[Fusion.Children] = {
 			scope:base(scope.CombineProperties(props, {
