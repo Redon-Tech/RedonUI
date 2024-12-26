@@ -14,7 +14,8 @@ local Components = {
 export type props = base.baseProps & {
 	PrimaryColor: Fusion.UsedAs<"Primary" | "Alternate">?,
 	AlternateColor: Fusion.UsedAs<theme.colors>?,
-	Rows: { [number]: Fusion.Child | string }?,
+	Rows: Fusion.UsedAs<{ [number]: Fusion.Child | string }>,
+	CanvasGroup: boolean?,
 
 	RowSize: Fusion.UsedAs<UDim2>,
 }
@@ -25,7 +26,8 @@ return function(baseScope: types.Scope, props: props)
 
 	local PrimaryColor = scope.EatValue(props, "PrimaryColor") :: Fusion.UsedAs<"Primary" | "Alternate">?
 	local InitialAlternateColor = scope.EatValue(props, "AlternateColor") :: Fusion.UsedAs<theme.colors>?
-	local Rows = scope.EatValue(props, "Rows") :: { [number]: Instance | string }
+	local Rows = scope.EatValue(props, "Rows") :: Fusion.UsedAs<{ [number]: Fusion.Child | string }>
+	local CanvasGroup = scope.EatValue(props, "CanvasGroup") :: boolean?
 
 	local RowSize = scope.EatValue(props, "RowSize") :: Fusion.UsedAs<UDim2>
 	local AutomaticSize = scope.EatValue(props, "AutomaticSize") :: Fusion.UsedAs<Enum.AutomaticSize>?
@@ -38,7 +40,7 @@ return function(baseScope: types.Scope, props: props)
 	end)
 
 	return scope:base(scope.CombineProperties({
-		ClassName = "CanvasGroup",
+		ClassName = if CanvasGroup == false then "Frame" else "CanvasGroup",
 		Name = `TableContainer<{props.Name}>`,
 
 		[Fusion.Children] = {
@@ -62,7 +64,7 @@ return function(baseScope: types.Scope, props: props)
 
 					-- selene: allow(shadowing)
 					scope:ForPairs(Rows, function(_, scope: typeof(scope), key: number, value: Fusion.Child | string)
-						if typeof(scope.peek(value)) == "string" then
+						if typeof(value) == "string" then
 							value = scope:textLabel {
 								Text = value :: string,
 								Size = UDim2.fromScale(1, 1),
@@ -85,6 +87,7 @@ return function(baseScope: types.Scope, props: props)
 								end),
 								AutomaticSize = AutomaticSize,
 								ClipsDescendants = true,
+								LayoutOrder = key,
 
 								[Fusion.Children] = {
 									value,
