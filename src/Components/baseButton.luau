@@ -27,6 +27,8 @@ export type props = base.baseProps & {
 
 	ForceSpeed: number?,
 	ForceDamping: number?,
+	AnimatePosition: boolean?,
+	AnimateSize: boolean?,
 
 	ButtonGlowColor: nil,
 }
@@ -64,11 +66,17 @@ return function(baseScope: types.Scope, props: props)
 	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
 	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up") :: (() -> ())?
 	local events = Util.StealEvents(props)
+	local AnimatePosition = Util.EatValue(props, "AnimatePosition") :: boolean?
+	local AnimateSize = Util.EatValue(props, "AnimateSize") :: boolean?
 
 	local desiredButtonPosition = scope:Value(UDim2.fromScale(0.5, 0.5))
-	local animatedButtonPosition = scope:Spring(desiredButtonPosition, SPRING_SPEED, SPRING_DAMPING)
+	local animatedButtonPosition = if AnimatePosition == false
+		then UDim2.fromScale(0.5, 0.5)
+		else scope:Spring(desiredButtonPosition, SPRING_SPEED, SPRING_DAMPING)
 	local desiredButtonSize = scope:Value(UDim2.fromScale(1, 1))
-	local animatedButtonSize = scope:Spring(desiredButtonSize, SPRING_SPEED, SPRING_DAMPING)
+	local animatedButtonSize = if AnimateSize == false
+		then UDim2.fromScale(1, 1)
+		else scope:Spring(desiredButtonSize, SPRING_SPEED, SPRING_DAMPING)
 	local isHovered = scope:Value(false)
 
 	local TriggerHover = Util.EatValue(props, "TriggerHover") :: Fusion.UsedAs<boolean>?
