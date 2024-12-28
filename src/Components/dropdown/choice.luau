@@ -5,18 +5,13 @@ local Util = require(RedonUI.Util)
 local theme = require(RedonUI.theme)
 local types = require(RedonUI.types)
 
-local base = require(RedonUI.Components.base)
+local textLabel = require(RedonUI.Components.textLabel)
 local Components = {
-	base = base,
+	textLabel = textLabel,
 }
 
-export type props = base.baseProps & {
-	Text: Fusion.UsedAs<string>,
-	TextColor3: Fusion.UsedAs<Color3>?,
-	FontWeight: Fusion.UsedAs<Enum.FontWeight>?,
+export type props = textLabel.props & {
 	OnSelect: () -> (),
-
-	TextColor: nil,
 }
 
 return function(baseScope: types.Scope, props: props)
@@ -29,25 +24,12 @@ return function(baseScope: types.Scope, props: props)
 	end
 	local BackgroundColor3: Fusion.Value<Color3> = scope:Value(scope.peek(InitialBackgroundColor3))
 
-	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
-	local TextColor3 = Util.EatValue(props, "TextColor3") :: Fusion.UsedAs<Color3>?
-	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
 	local OnSelect = Util.EatValue(props, "OnSelect") :: () -> ()
 
-	return scope:base(scope.CombineProperties(props, {
+	return scope:textLabel(scope.CombineProperties(props, {
 		ClassName = "TextButton",
 		BackgroundColor3 = BackgroundColor3,
-		Text = Text,
-		TextColor3 = TextColor3 or currentTheme.colors.text,
-		FontFace = scope:Computed(function(use)
-			if use(FontWeight) ~= nil then
-				return currentTheme.font[use(FontWeight)]
-			else
-				return currentTheme.font[Enum.FontWeight.Regular]
-			end
-		end),
-		TextXAlignment = Enum.TextXAlignment.Left,
-		TextScaled = true,
+		BackgroundTransparency = 0,
 
 		[Fusion.OnEvent "Activated"] = OnSelect,
 
