@@ -26,6 +26,7 @@ return function(baseScope: types.Scope, props: props)
 	return scope:textLabel(scope.CombineProperties(props, {
 		ClassName = "TextBox",
 		PlaceholderColor3 = PlaceholderColor3 or currentTheme.colors.subtext0,
+		BackgroundTransparency = props.BackgroundTransparency or 0,
 
 		[Fusion.Children] = {
 			scope:New("UIPadding") {

@@ -11,6 +11,7 @@ local Components = {
 }
 
 export type props = base.baseProps & {
+	BackgroundTransparency: Fusion.UsedAs<number>?,
 	Text: Fusion.UsedAs<string>?,
 	TextColor3: Fusion.UsedAs<Color3>?,
 	FontWeight: Fusion.UsedAs<Enum.FontWeight>?,
@@ -35,10 +36,11 @@ return function(baseScope: types.Scope, props: props)
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>?
 	local TextColor3 = Util.EatValue(props, "TextColor3") :: Fusion.UsedAs<Color3>?
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
+	local MaxTextSize = Util.EatValue(props, "MaxTextSize") :: Fusion.UsedAs<number>?
 
 	return scope:base(scope.CombineProperties(props, {
 		ClassName = ClassName,
-		BackgroundTransparency = 1,
+		BackgroundTransparency = props.BackgroundTransparency or 1,
 		Text = Text,
 		TextScaled = props.TextScaled,
 		TextSize = props.TextSize,
