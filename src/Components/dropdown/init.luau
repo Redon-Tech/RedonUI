@@ -26,7 +26,8 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 	OnOptionSelected: (I, V) -> (),
 
 	DropdownHeight: Fusion.UsedAs<number>,
-	DropdownYOffset: Fusion.UsedAs<number>?,
+	DropdownYOffset: Fusion.UsedAs<UDim>?,
+	RemoveForPadding: Fusion.UsedAs<UDim2>?,
 }
 
 local SPRING_SPEED = 30
@@ -50,7 +51,8 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local OnOptionSelected = Util.EatValue(props, "OnOptionSelected") :: (I, V) -> ()
 
 	local DropdownHeight = Util.EatValue(props, "DropdownHeight") :: Fusion.UsedAs<number>
-	local DropdownYOffset = Util.EatValue(props, "DropdownYOffset") :: Fusion.UsedAs<number>?
+	local DropdownYOffset = Util.EatValue(props, "DropdownYOffset") :: Fusion.UsedAs<UDim>?
+	local RemoveForPadding = Util.EatValue(props, "RemoveForPadding") :: Fusion.UsedAs<UDim2>?
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
@@ -65,6 +67,9 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local buttonSize = scope:Value(nil)
 	local dropdownSize = scope:Value(nil)
 	local triggerHover = scope:Value(false)
+	local isFullyClosed = scope:Computed(function(use)
+		return use(isOpen) == false and use(dropdownSize) == Vector2.new()
+	end)
 
 	return {
 		scope:baseButton(scope.CombineProperties(props, {
@@ -136,12 +141,18 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			end),
 			Position = scope:Computed(function(use)
 				local basePosition = use(props.Position) :: UDim2?
+				if use(isFullyClosed) == true then
+					return basePosition or UDim2.new()
+				end
 				local baseSize = use(buttonSize) :: Vector2?
-				local additionalYOffset = use(DropdownYOffset) :: number?
+				local additionalYOffset = use(DropdownYOffset) :: UDim?
 				if basePosition ~= nil and baseSize ~= nil then
-					return basePosition + UDim2.fromOffset(0, (baseSize.Y / 2) + 5 + (additionalYOffset or 0))
+					return basePosition
+						+ UDim2.fromOffset(0, (baseSize.Y / 2) + 5)
+						+ UDim2.new(UDim.new(), additionalYOffset or UDim.new())
 				elseif baseSize ~= nil then
-					return UDim2.fromOffset(0, (baseSize.Y / 2) + 5 + (additionalYOffset or 0))
+					return UDim2.fromOffset(0, (baseSize.Y / 2) + 5)
+						+ UDim2.new(UDim.new(), additionalYOffset or UDim.new())
 				end
 
 				return UDim2.fromOffset(0, 0)
@@ -163,7 +174,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			ZIndex = 2,
 			BackgroundTransparency = 1,
 
-			[Fusion.Children] = {
+			[Fusion.Children] = Fusion.Child {
 				scope:base(scope.CombineProperties(props, {
 					ClassName = "CanvasGroup",
 					AnchorPoint = Vector2.new(0.5, 0),
@@ -171,10 +182,15 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 					Size = scope:Spring(
 						scope:Computed(function(use)
 							local baseSize = use(props.Size) :: UDim2?
+							local removeForPadding = UDim2.new()
+							if RemoveForPadding ~= nil then
+								removeForPadding = use(RemoveForPadding) :: UDim2
+							end
+
 							if use(isOpen) and baseSize ~= nil then
-								return UDim2.fromScale(1, 1)
+								return UDim2.fromScale(1, 1) - removeForPadding
 							else
-								return UDim2.fromScale(0, 0)
+								return UDim2.fromScale(0, 0) - removeForPadding
 							end
 						end),
 						SPRING_SPEED,
@@ -211,12 +227,15 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 
 								--selene: allow(shadowing)
 								scope:ForPairs(Options, function(use, scope: typeof(scope), index, value)
+									local size = use(buttonSize) :: Vector2?
+									if size == nil then
+										size = Vector2.new(150, 42)
+									end
 									return index,
 										scope:choice {
-											Size = UDim2.fromOffset(150, 42),
+											Size = UDim2.fromOffset((size :: Vector2).X, (size :: Vector2).Y), --UDim2.fromOffset(150, 42),
 											BackgroundColor3 = props.BackgroundColor3,
 											Text = use(value),
-											TextColor3 = TextColor3,
 											FontWeight = scope:Computed(function(use)
 												if use(value) == use(Text) then
 													return Enum.FontWeight.Bold
@@ -224,6 +243,15 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 													return Enum.FontWeight.Regular
 												end
 											end),
+
+											TextColor3 = TextColor3,
+											TextScaled = TextScaled,
+											TextSize = TextSize,
+											TextXAlignment = TextXAlignment,
+											TextYAlignment = TextYAlignment,
+											RichText = RichText,
+											MaxTextSize = MaxTextSize,
+
 											OnSelect = function()
 												triggerHover:set(true)
 												OnOptionSelected(index, use(value))
