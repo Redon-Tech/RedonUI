@@ -23,6 +23,9 @@ export type baseProps = shadow.props & {
 
 	Shadow: Fusion.UsedAs<boolean>?,
 
+	MaxSize: Fusion.UsedAs<Vector2>?,
+	MinSize: Fusion.UsedAs<Vector2>?,
+
 	[Fusion.SpecialKey]: unknown,
 
 	BackgroundColor: nil,
@@ -48,6 +51,9 @@ return function(baseScope: types.Scope, props: baseProps)
 
 	local Shadow = Util.EatValue(props, "Shadow") :: Fusion.UsedAs<boolean>?
 	local ShadowColor3 = Util.EatValue(props, "ShadowColor3") :: Fusion.UsedAs<Color3>?
+
+	local MaxSize = Util.EatValue(props, "MaxSize") :: Fusion.UsedAs<Vector2>?
+	local MinSize = Util.EatValue(props, "MinSize") :: Fusion.UsedAs<Vector2>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
 		[Fusion.Children] = {
@@ -86,6 +92,13 @@ return function(baseScope: types.Scope, props: baseProps)
 					}
 					else nil
 			end),
+
+			if MaxSize ~= nil or MinSize ~= nil
+				then scope:New("UISizeConstraint") {
+					MaxSize = MaxSize,
+					MinSize = MinSize,
+				}
+				else {},
 
 			props[Fusion.Children] :: any,
 		},
