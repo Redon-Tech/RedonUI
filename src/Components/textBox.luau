@@ -14,6 +14,11 @@ export type props = textLabel.props & {
 	PlaceholderText: Fusion.UsedAs<string>?,
 	PlaceholderColor3: Fusion.UsedAs<Color3>?,
 
+	PaddingTop: Fusion.UsedAs<UDim>?,
+	PaddingBottom: Fusion.UsedAs<UDim>?,
+	PaddingLeft: Fusion.UsedAs<UDim>?,
+	PaddingRight: Fusion.UsedAs<UDim>?,
+
 	PlaceholderColor: nil,
 }
 
@@ -22,6 +27,10 @@ return function(baseScope: types.Scope, props: props)
 	local currentTheme = theme.theme:now()
 
 	local PlaceholderColor3 = Util.EatValue(props, "PlaceholderColor3") :: Fusion.UsedAs<Color3>?
+	local PaddingTop = Util.EatValue(props, "PaddingTop") :: Fusion.UsedAs<UDim>?
+	local PaddingBottom = Util.EatValue(props, "PaddingBottom") :: Fusion.UsedAs<UDim>?
+	local PaddingLeft = Util.EatValue(props, "PaddingLeft") :: Fusion.UsedAs<UDim>?
+	local PaddingRight = Util.EatValue(props, "PaddingRight") :: Fusion.UsedAs<UDim>?
 
 	return scope:textLabel(scope.CombineProperties(props, {
 		ClassName = "TextBox",
@@ -30,10 +39,10 @@ return function(baseScope: types.Scope, props: props)
 
 		[Fusion.Children] = {
 			scope:New("UIPadding") {
-				PaddingLeft = UDim.new(0, 10),
-				PaddingRight = UDim.new(0, 10),
-				PaddingTop = UDim.new(0, 10),
-				PaddingBottom = UDim.new(0, 10),
+				PaddingLeft = PaddingLeft or UDim.new(0, 10),
+				PaddingRight = PaddingRight or UDim.new(0, 10),
+				PaddingTop = PaddingTop or UDim.new(0, 10),
+				PaddingBottom = PaddingBottom or UDim.new(0, 10),
 			},
 		},
 	}))
