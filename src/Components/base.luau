@@ -56,34 +56,28 @@ return function(baseScope: types.Scope, props: baseProps)
 	local MinSize = Util.EatValue(props, "MinSize") :: Fusion.UsedAs<Vector2>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
-		[Fusion.Children] = {
-			scope:Computed(function(use)
-				return if use(CornerRadius) ~= nil
-					then scope:New("UICorner") {
-						CornerRadius = use(CornerRadius),
-					}
-					else nil
-			end),
+		[Fusion.Children] = Fusion.Child {
+			if CornerRadius ~= nil
+				then scope:New("UICorner") {
+					CornerRadius = CornerRadius,
+				}
+				else {},
 
-			scope:Computed(function(use)
-				return if use(Border) ~= nil
-					then scope:New("UIStroke") {
-						Thickness = use(Border),
-						Color = BorderColor3 or currentTheme.colors.white,
-						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-					}
-					else nil
-			end),
+			if Border ~= nil
+				then scope:New("UIStroke") {
+					Thickness = Border,
+					Color = BorderColor3 or currentTheme.colors.white,
+					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				}
+				else {},
 
-			scope:Computed(function(use)
-				return if use(Gradient) ~= nil
-					then scope:New("UIGradient") {
-						Color = use(Gradient),
-						Transparency = use(GradientTransparency),
-						Rotation = use(GradientRotation),
-					}
-					else nil
-			end),
+			if Gradient ~= nil
+				then scope:New("UIGradient") {
+					Color = Gradient,
+					Transparency = GradientTransparency,
+					Rotation = GradientRotation,
+				}
+				else {},
 
 			scope:Computed(function(use)
 				return if use(Shadow) == true
