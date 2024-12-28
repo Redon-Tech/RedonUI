@@ -39,6 +39,12 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local Text = Util.EatValue(props, "Text") :: Fusion.UsedAs<string>
 	local TextColor3 = Util.EatValue(props, "TextColor3") :: Fusion.UsedAs<Color3>?
 	local FontWeight = Util.EatValue(props, "FontWeight") :: Fusion.UsedAs<Enum.FontWeight>?
+	local TextScaled = Util.EatValue(props, "TextScaled") :: Fusion.UsedAs<boolean>?
+	local TextSize = Util.EatValue(props, "TextSize") :: Fusion.UsedAs<number>?
+	local TextXAlignment = Util.EatValue(props, "TextXAlignment") :: Fusion.UsedAs<Enum.TextXAlignment>?
+	local TextYAlignment = Util.EatValue(props, "TextYAlignment") :: Fusion.UsedAs<Enum.TextYAlignment>?
+	local RichText = Util.EatValue(props, "RichText") :: Fusion.UsedAs<boolean>?
+	local MaxTextSize = Util.EatValue(props, "MaxTextSize") :: Fusion.UsedAs<number>?
 
 	local Options = Util.EatValue(props, "Options") :: Fusion.UsedAs<{ [I]: V }>
 	local OnOptionSelected = Util.EatValue(props, "OnOptionSelected") :: (I, V) -> ()
@@ -88,9 +94,13 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 					BackgroundTransparency = 1,
 					Text = Text,
 					TextColor3 = TextColor3,
-					TextScaled = true,
 					FontWeight = FontWeight,
-					TextXAlignment = Enum.TextXAlignment.Left,
+					TextScaled = TextScaled,
+					TextSize = TextSize,
+					TextXAlignment = TextXAlignment,
+					TextYAlignment = TextYAlignment,
+					RichText = RichText,
+					MaxTextSize = MaxTextSize,
 				},
 
 				scope:New("ImageLabel") {
