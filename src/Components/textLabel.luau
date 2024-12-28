@@ -21,6 +21,8 @@ export type props = base.baseProps & {
 	TextYAlignment: Fusion.UsedAs<Enum.TextYAlignment>?,
 	RichText: Fusion.UsedAs<boolean>?,
 
+	MaxTextSize: Fusion.UsedAs<number>?,
+
 	TextColor: nil,
 }
 
@@ -55,5 +57,13 @@ return function(baseScope: types.Scope, props: props)
 			end
 		end),
 		RichText = props.RichText,
+
+		[Fusion.Children] = {
+			if MaxTextSize
+				then scope:New("UITextSizeConstraint") {
+					MaxTextSize = MaxTextSize,
+				}
+				else {},
+		},
 	}))
 end

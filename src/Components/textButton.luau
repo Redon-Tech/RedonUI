@@ -26,6 +26,7 @@ return function(baseScope: types.Scope, props: props)
 	local TextXAlignment = Util.EatValue(props, "TextXAlignment") :: Fusion.UsedAs<Enum.TextXAlignment>?
 	local TextYAlignment = Util.EatValue(props, "TextYAlignment") :: Fusion.UsedAs<Enum.TextYAlignment>?
 	local RichText = Util.EatValue(props, "RichText") :: Fusion.UsedAs<boolean>?
+	local MaxTextSize = Util.EatValue(props, "MaxTextSize") :: Fusion.UsedAs<number>?
 
 	local TextLabelSize = Util.EatValue(props, "TextLabelSize") :: Fusion.UsedAs<UDim2>?
 
@@ -45,6 +46,7 @@ return function(baseScope: types.Scope, props: props)
 				TextXAlignment = TextXAlignment,
 				TextYAlignment = TextYAlignment,
 				RichText = RichText,
+				MaxTextSize = MaxTextSize,
 			},
 		},
 	}))
