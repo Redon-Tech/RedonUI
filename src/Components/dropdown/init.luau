@@ -28,6 +28,7 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 	DropdownHeight: Fusion.UsedAs<number>,
 	DropdownYOffset: Fusion.UsedAs<UDim>?,
 	RemoveForPadding: Fusion.UsedAs<UDim2>?,
+	ScaleChoicesUpBy: Fusion.UsedAs<number>?,
 }
 
 local SPRING_SPEED = 30
@@ -53,6 +54,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local DropdownHeight = Util.EatValue(props, "DropdownHeight") :: Fusion.UsedAs<number>
 	local DropdownYOffset = Util.EatValue(props, "DropdownYOffset") :: Fusion.UsedAs<UDim>?
 	local RemoveForPadding = Util.EatValue(props, "RemoveForPadding") :: Fusion.UsedAs<UDim2>?
+	local ScaleChoicesUpBy = Util.EatValue(props, "ScaleChoicesUpBy") :: Fusion.UsedAs<number>?
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
@@ -230,6 +232,10 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 									local size = use(buttonSize) :: Vector2?
 									if size == nil then
 										size = Vector2.new(150, 42)
+									end
+									if ScaleChoicesUpBy ~= nil then
+										local by = use(ScaleChoicesUpBy)
+										size = size :: Vector2 * Vector2.new(by, by)
 									end
 									return index,
 										scope:choice {
