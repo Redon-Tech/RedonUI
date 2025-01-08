@@ -44,6 +44,8 @@ return function(baseScope: types.Scope, props: props)
 		return if use(PrimaryColor) ~= "Alternate" then use(props.BackgroundColor3) else use(InitialAlternateColor3)
 	end)
 
+	local Children = scope.EatValue(props, Fusion.Children) :: Fusion.Child
+
 	return scope:base(scope.CombineProperties({
 		ClassName = if CanvasGroup == false then "Frame" else "CanvasGroup",
 		Name = `TableContainer<{props.Name}>`,
@@ -99,6 +101,8 @@ return function(baseScope: types.Scope, props: props)
 								},
 							}
 					end),
+
+					Children,
 				},
 			},
 		},
