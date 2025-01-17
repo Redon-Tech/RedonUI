@@ -12,6 +12,7 @@ local Components = {
 
 export type baseProps = shadow.props & {
 	ClassName: string?,
+	ZIndex: Fusion.UsedAs<number>?,
 
 	Gradient: Fusion.UsedAs<ColorSequence>?,
 	GradientTransparency: Fusion.UsedAs<NumberSequence>?,
@@ -83,6 +84,7 @@ return function(baseScope: types.Scope, props: baseProps)
 				return if use(Shadow) == true
 					then scope:shadow {
 						ShadowColor3 = ShadowColor3,
+						ZIndex = props.ZIndex,
 					}
 					else nil
 			end),

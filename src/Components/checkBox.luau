@@ -84,7 +84,11 @@ return function(baseScope: types.Scope, props: props)
 				Visible = Enabled,
 				ScaleType = Enum.ScaleType.Fit,
 
-				ZIndex = 1,
+				ZIndex = if props.ZIndex
+					then scope:Computed(function(use)
+						return use(props.ZIndex) :: number + 1
+					end)
+					else 2,
 			},
 		},
 	}))

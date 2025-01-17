@@ -47,6 +47,11 @@ return function(baseScope: types.Scope, props: props)
 				TextYAlignment = TextYAlignment,
 				RichText = RichText,
 				MaxTextSize = MaxTextSize,
+				ZIndex = if props.ZIndex
+					then scope:Computed(function(use)
+						return use(props.ZIndex) :: number + 2
+					end)
+					else 3,
 			},
 		},
 	}))

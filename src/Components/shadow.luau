@@ -6,6 +6,7 @@ local types = require(RedonUI.types)
 local Components = {}
 
 export type props = {
+	ZIndex: Fusion.UsedAs<number>?,
 	ShadowColor3: Fusion.UsedAs<Color3>?,
 
 	ShadowColor: nil,
@@ -26,6 +27,10 @@ return function(baseScope: types.Scope, props: props)
 		ScaleType = Enum.ScaleType.Slice,
 		SliceCenter = Rect.new(256, 256, 256, 256),
 		SliceScale = 0.2,
-		ZIndex = -1,
+		ZIndex = if props.ZIndex
+			then scope:Computed(function(use)
+				return use(props.ZIndex) :: number - 1
+			end)
+			else 1,
 	}
 end

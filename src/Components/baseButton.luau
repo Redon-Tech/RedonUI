@@ -114,6 +114,7 @@ return function(baseScope: types.Scope, props: props)
 				Size = animatedButtonSize,
 				Position = animatedButtonPosition,
 				AnchorPoint = Vector2.new(0.5, 0.5),
+				ZIndex = ZIndex,
 
 				[Fusion.OnEvent "MouseEnter"] = function()
 					if Reactive then
@@ -170,7 +171,12 @@ return function(baseScope: types.Scope, props: props)
 								AnchorPoint = Vector2.new(0.5, 0.5),
 								Position = UDim2.fromScale(0.5, 0.5),
 								Size = UDim2.fromScale(1, 1),
-								ZIndex = -1,
+								--selene: allow(shadowing)
+								ZIndex = if ZIndex
+									then scope:Computed(function(use)
+										return use(ZIndex) :: number + 1
+									end)
+									else 2,
 
 								[Fusion.Children] = {
 									-- selene: allow(shadowing)
