@@ -24,6 +24,7 @@ export type props<I, V> = baseButton.props & textLabel.props & {
 
 	Options: Fusion.UsedAs<{ [I]: V }>,
 	OnOptionSelected: (I, V) -> (),
+	OptionOverrides: Fusion.UsedAs<{ [I]: choice.props }>?,
 
 	DropdownHeight: Fusion.UsedAs<number>,
 	DropdownYOffset: Fusion.UsedAs<UDim>?,
@@ -50,6 +51,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 
 	local Options = Util.EatValue(props, "Options") :: Fusion.UsedAs<{ [I]: V }>
 	local OnOptionSelected = Util.EatValue(props, "OnOptionSelected") :: (I, V) -> ()
+	local OptionOverrides = Util.EatValue(props, "OptionOverrides") :: Fusion.UsedAs<{ [I]: choice.props }>?
 
 	local DropdownHeight = Util.EatValue(props, "DropdownHeight") :: Fusion.UsedAs<number>
 	local DropdownYOffset = Util.EatValue(props, "DropdownYOffset") :: Fusion.UsedAs<UDim>?
@@ -237,8 +239,10 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 										local by = use(ScaleChoicesUpBy)
 										size = size :: Vector2 * Vector2.new(by, by)
 									end
+									local overrides = use(OptionOverrides) :: { [I]: choice.props }?
+									local override = if overrides ~= nil then overrides[index] else nil
 									return index,
-										scope:choice {
+										scope:choice(scope.CombineProperties({
 											Size = UDim2.fromOffset((size :: Vector2).X, (size :: Vector2).Y), --UDim2.fromOffset(150, 42),
 											BackgroundColor3 = props.BackgroundColor3,
 											Text = use(value),
@@ -266,7 +270,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 													triggerHover:set(false)
 												end)
 											end,
-										}
+										}, override or {}))
 								end),
 							},
 						},
