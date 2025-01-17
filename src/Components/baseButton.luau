@@ -24,6 +24,7 @@ export type props = base.baseProps & {
 
 	Reactive: Fusion.UsedAs<boolean>?,
 	TriggerHover: Fusion.UsedAs<boolean>?,
+	TriggerPush: Fusion.UsedAs<boolean>?,
 
 	ForceSpeed: number?,
 	ForceDamping: number?,
@@ -90,6 +91,21 @@ return function(baseScope: types.Scope, props: props)
 				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.5))
 				desiredButtonSize:set(UDim2.fromScale(1, 1))
 				isHovered:set(false)
+			end
+		end)
+	end
+	local TriggerPush = Util.EatValue(props, "TriggerPush") :: Fusion.UsedAs<boolean>?
+	if TriggerPush ~= nil then
+		scope:Observer(TriggerPush):onChange(function()
+			if scope.peek(TriggerPush) == true then
+				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.6))
+				desiredButtonSize:set(UDim2.fromScale(0.95, 0.95))
+			elseif scope.peek(isHovered) == true then
+				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.4))
+				desiredButtonSize:set(UDim2.fromScale(1.05, 1.05))
+			else
+				desiredButtonPosition:set(UDim2.fromScale(0.5, 0.5))
+				desiredButtonSize:set(UDim2.fromScale(1, 1))
 			end
 		end)
 	end
