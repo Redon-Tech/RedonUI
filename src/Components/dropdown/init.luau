@@ -70,11 +70,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local dropdownSize = scope:Value(nil)
 	local triggerHover = scope:Value(false)
 	local isFullyClosed = scope:Computed(function(use)
-		local currentDropdownSize = use(dropdownSize) :: Vector2?
-		if currentDropdownSize == nil then
-			return false
-		end
-		return use(isOpen) == false and currentDropdownSize.X < 1
+		return use(isOpen) == false and use(dropdownSize) == Vector2.new()
 	end)
 
 	return {
@@ -180,6 +176,15 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			ZIndex = 2,
 			BackgroundTransparency = 1,
 
+			Visible = scope:Computed(function(use)
+				local size = use(dropdownSize) :: Vector2?
+				if size ~= nil and size.Y > 0 then
+					return true
+				end
+
+				return false
+			end),
+
 			[Fusion.Children] = Fusion.Child {
 				scope:base(scope.CombineProperties(props, {
 					ClassName = "CanvasGroup",
@@ -204,15 +209,6 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 					),
 
 					[Fusion.Out "AbsoluteSize"] = dropdownSize,
-
-					Visible = scope:Computed(function(use)
-						local size = use(dropdownSize) :: Vector2?
-						if size ~= nil and size.Y > 0 then
-							return true
-						end
-
-						return false
-					end),
 
 					[Fusion.Children] = {
 						scope:New("ScrollingFrame") {
