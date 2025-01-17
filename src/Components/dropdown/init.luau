@@ -241,7 +241,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 										scope:choice {
 											Size = UDim2.fromOffset((size :: Vector2).X, (size :: Vector2).Y), --UDim2.fromOffset(150, 42),
 											BackgroundColor3 = props.BackgroundColor3,
-											Text = value,
+											Text = use(value),
 											FontWeight = scope:Computed(function(use)
 												if use(value) == use(Text) then
 													return Enum.FontWeight.Bold
@@ -259,8 +259,8 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 											MaxTextSize = MaxTextSize,
 
 											OnSelect = function()
-												OnOptionSelected(index, scope.peek(value))
 												triggerHover:set(true)
+												OnOptionSelected(index, use(value))
 												isOpen:set(false)
 												task.delay(0.15, function()
 													triggerHover:set(false)
