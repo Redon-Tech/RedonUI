@@ -56,7 +56,7 @@ return function(baseScope: types.Scope, props: baseProps)
 	local MinSize = Util.EatValue(props, "MinSize") :: Fusion.UsedAs<Vector2>?
 
 	return scope:New(ClassName)(scope.CombineProperties({
-		[Fusion.Children] = Fusion.Child {
+		[Fusion.Children] = {
 			if CornerRadius ~= nil
 				then scope:New("UICorner") {
 					CornerRadius = CornerRadius,
@@ -93,8 +93,6 @@ return function(baseScope: types.Scope, props: baseProps)
 					MinSize = MinSize,
 				}
 				else {},
-
-			props[Fusion.Children] :: any,
 		},
 	}, props))
 end
