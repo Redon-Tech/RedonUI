@@ -59,6 +59,8 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local ScaleChoicesUpBy = Util.EatValue(props, "ScaleChoicesUpBy") :: Fusion.UsedAs<number>?
 
 	local Reactive = Util.EatValue(props, "Reactive") :: Fusion.UsedAs<boolean>?
+	local AnimatePosition = Util.EatValue(props, "AnimatePosition") :: Fusion.UsedAs<boolean>?
+	local AnimateSize = Util.EatValue(props, "AnimateSize") :: Fusion.UsedAs<boolean>?
 	local ButtonGlow = Util.EatValue(props, "ButtonGlow") :: Fusion.UsedAs<boolean>?
 	local ButtonGlowColor3 = Util.EatValue(props, "ButtonGlowColor3") :: Fusion.UsedAs<Color3>?
 	local MouseEnter = Util.EatValue(props, "MouseEnter") :: (() -> ())?
@@ -84,6 +86,8 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 			MouseLeave = MouseLeave,
 			MouseButton1Up = MouseButton1Up,
 			TriggerHover = triggerHover,
+			AnimateSize = AnimateSize,
+			AnimatePosition = AnimatePosition,
 
 			[Fusion.Out "AbsoluteSize"] = buttonSize,
 
