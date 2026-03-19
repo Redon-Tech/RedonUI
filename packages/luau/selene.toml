@@ -1,0 +1,4 @@
+std = "roblox"
+
+[config]
+exclude = ["pesde_packages"]

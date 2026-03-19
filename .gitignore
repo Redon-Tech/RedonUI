@@ -1,0 +1,20 @@
+# Node / TypeScript
+node_modules/
+dist/
+.env
+.env.local
+*.tsbuildinfo
+
+# Luau / Roblox
+*.rbxl
+*.rbxlx.lock
+*.rbxl.lock
+.pesde/
+pesde_packages/
+roblox_packages/
+DevPackages/
+sourcemap.json
+
+# OS
+.DS_Store
+Thumbs.db
