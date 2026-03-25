@@ -66,7 +66,7 @@ return function(baseScope: types.Scope, props: props)
 	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
 	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
 	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up") :: (() -> ())?
-	local events = Util.StealEvents(props)
+	local events = Util.EatEvents(props)
 	local AnimatePosition = Util.EatValue(props, "AnimatePosition") :: boolean?
 	local AnimateSize = Util.EatValue(props, "AnimateSize") :: boolean?
 

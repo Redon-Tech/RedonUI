@@ -1,9 +1,9 @@
 local CombineProperties = require(script.CombineProperties)
 local EatValue = require(script.EatValue)
-local StealEvents = require(script.StealEvents)
+local EatEvents = require(script.EatEvents)
 
 return {
 	CombineProperties = CombineProperties,
 	EatValue = EatValue,
-	StealEvents = StealEvents,
+	EatEvents = EatEvents,
 }

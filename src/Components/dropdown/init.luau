@@ -67,7 +67,7 @@ return function<I, V>(baseScope: types.Scope, props: props<I, V>)
 	local MouseLeave = Util.EatValue(props, "MouseLeave") :: (() -> ())?
 	local MouseButton1Down = Util.EatValue(props, "MouseButton1Down") :: (() -> ())?
 	local MouseButton1Up = Util.EatValue(props, "MouseButton1Up") :: (() -> ())?
-	local events = Util.StealEvents(props)
+	local events = Util.EatEvents(props)
 
 	local isOpen = scope:Value(false)
 	local buttonSize = scope:Value(nil)
